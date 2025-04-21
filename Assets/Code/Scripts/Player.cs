@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
-    This script provides jumping and movement in Unity 3D - Gatsby
-*/
-
 public class Player : MonoBehaviour
 {
     // Camera Rotation
@@ -16,13 +12,18 @@ public class Player : MonoBehaviour
     // Ground Movement
     private Rigidbody rb;
     public float MoveSpeed = 5f;
+    
+    // Running
+    public float RunSpeed = 10f;
+    private bool isRunning = false;
+
     private float moveHorizontal;
     private float moveForward;
 
     // Jumping
     public float jumpForce = 10f;
-    public float fallMultiplier = 2.5f; // Multiplies gravity when falling down
-    public float ascendMultiplier = 2f; // Multiplies gravity for ascending to peak of jump
+    public float fallMultiplier = 2.5f;
+    public float ascendMultiplier = 2f;
     private bool isGrounded = true;
     public LayerMask groundLayer;
     private float groundCheckTimer = 0f;
@@ -30,17 +31,18 @@ public class Player : MonoBehaviour
     private float playerHeight;
     private float raycastDistance;
 
+    private Animator playerAnimator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         cameraTransform = Camera.main.transform;
+        playerAnimator = GetComponent<Animator>();
 
-        // Set the raycast to be slightly beneath the player's feet
         playerHeight = GetComponent<CapsuleCollider>().height * transform.localScale.y;
         raycastDistance = (playerHeight / 2) + 0.2f;
 
-        // Hides the mouse
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -57,7 +59,6 @@ public class Player : MonoBehaviour
             Jump();
         }
 
-        // Checking when we're on the ground and keeping track of our ground check delay
         if (!isGrounded && groundCheckTimer <= 0f)
         {
             Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
@@ -67,7 +68,6 @@ public class Player : MonoBehaviour
         {
             groundCheckTimer -= Time.deltaTime;
         }
-
     }
 
     void FixedUpdate()
@@ -78,20 +78,38 @@ public class Player : MonoBehaviour
 
     void MovePlayer()
     {
-
         Vector3 movement = (transform.right * moveHorizontal + transform.forward * moveForward).normalized;
-        Vector3 targetVelocity = movement * MoveSpeed;
 
-        // Apply movement to the Rigidbody
+        isRunning = Input.GetKey(KeyCode.LeftShift);
+        float currentSpeed = isRunning ? RunSpeed : MoveSpeed;
+
+        Vector3 targetVelocity = movement * currentSpeed;
+
         Vector3 velocity = rb.velocity;
         velocity.x = targetVelocity.x;
         velocity.z = targetVelocity.z;
         rb.velocity = velocity;
 
-        // If we aren't moving and are on the ground, stop velocity so we don't slide
-        if (isGrounded && moveHorizontal == 0 && moveForward == 0)
+        bool isMoving = isGrounded && (moveHorizontal != 0 || moveForward != 0);
+
+        if (!isMoving)
         {
+            playerAnimator.SetBool("isWalking", false);
+            playerAnimator.SetBool("isRunning", false);
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        }
+        else
+        {
+            if (isRunning)
+            {
+                playerAnimator.SetBool("isRunning", true);
+                playerAnimator.SetBool("isWalking", false);
+            }
+            else
+            {
+                playerAnimator.SetBool("isRunning", false);
+                playerAnimator.SetBool("isWalking", true);
+            }
         }
     }
 
@@ -110,21 +128,18 @@ public class Player : MonoBehaviour
     {
         isGrounded = false;
         groundCheckTimer = groundCheckDelay;
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z); // Initial burst for the jump
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
     }
 
     void ApplyJumpPhysics()
     {
         if (rb.velocity.y < 0)
         {
-            // Falling: Apply fall multiplier to make descent faster
             rb.velocity += Vector3.up * Physics.gravity.y * fallMultiplier * Time.fixedDeltaTime;
-        } // Rising
+        }
         else if (rb.velocity.y > 0)
         {
-            // Rising: Change multiplier to make player reach peak of jump faster
             rb.velocity += Vector3.up * Physics.gravity.y * ascendMultiplier * Time.fixedDeltaTime;
         }
     }
 }
-
