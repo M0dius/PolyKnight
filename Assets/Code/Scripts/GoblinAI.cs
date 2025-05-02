@@ -29,8 +29,9 @@ public class GoblinAI : MonoBehaviour
     private bool isDead = false;
     private bool isPositioned = false;
 
-    // Animator parameter names (must match exactly!)
+    // Animator parameter names (must match Animator exactly!)
     private string walkParam = "isWalking1";
+    private string sprintParam = "isSprinting";
     private string attackParam = "attack1";
     private string dieParam = "die1";
     private string kickLeftParam = "kickLeft";
@@ -69,6 +70,13 @@ public class GoblinAI : MonoBehaviour
         float distance = Vector3.Distance(transform.position, player.position);
         bool near = distance <= detectionRange;
 
+        float moveSpeed = agent.velocity.magnitude;
+        bool isMoving = moveSpeed > 0.05f;
+        bool shouldSprint = isMoving && GameObject.FindObjectsOfType<GoblinAI>().Length <= 3;
+
+        animator?.SetBool(walkParam, isMoving);
+        animator?.SetBool(sprintParam, shouldSprint);
+
         if (near)
         {
             Chase();
@@ -78,9 +86,7 @@ public class GoblinAI : MonoBehaviour
         }
         else
         {
-            if (agent != null)
-                agent.SetDestination(transform.position);
-
+            agent?.SetDestination(transform.position);
             animator?.SetBool(walkParam, false);
         }
     }
@@ -159,7 +165,6 @@ public class GoblinAI : MonoBehaviour
                     break;
             }
 
-            // Debug current animation state
             var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             Debug.Log("🎞️ Current State: " + stateInfo.fullPathHash);
         }
