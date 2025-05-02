@@ -1111,6 +1111,7 @@ GameObject:
   - component: {fileID: 1544929396901128621}
   - component: {fileID: -5834947507459049334}
   - component: {fileID: -1165990347375227169}
+  - component: {fileID: 5575154715778646728}
   m_Layer: 0
   m_Name: deb_Goblin01
   m_TagString: Untagged
@@ -1193,6 +1194,28 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5575154715778646728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544929396908415551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 30
+  damage: 7
+  detectionRange: 10
+  attackRange: 1.5
+  attackCooldown: 0.5
+  positionType: 0
+  areaCenter: {x: 0, y: 0, z: 0}
+  areaSize: {x: 0, y: 0, z: 0}
+  minDistanceFromOtherEnemies: 2
+  minDistanceFromPlayer: 5
 --- !u!1 &1544929396908415585
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,12 +5,10 @@ using UnityEngine.AI;
 
 public class GoblinAI : MonoBehaviour
 {
-    // References
     private Transform player;
     private NavMeshAgent agent;
     private Animator animator;
 
-    // Stats
     [Header("Goblin Stats")]
     public float health = 30f;
     public float damage = 7f;
@@ -18,97 +16,72 @@ public class GoblinAI : MonoBehaviour
     public float attackRange = 1.5f;
     public float attackCooldown = 0.5f;
 
-    // Position settings
-  
     public enum PositionType { Defined, Random }
     public PositionType positionType = PositionType.Defined;
+
     [Header("Position Settings")]
-    // For random position
     public Vector3 areaCenter;
     public Vector3 areaSize;
     public float minDistanceFromOtherEnemies = 2f;
     public float minDistanceFromPlayer = 5f;
 
-    // State tracking
     private bool canAttack = true;
     private bool isDead = false;
     private bool isPositioned = false;
 
-    // Animation parameter names - change these to match your model's animator
-    private string walkParamName = "isWalking";
-    private string attackParamName = "attack";
-    private string dieParamName = "die";
+    // Animator parameter names (must match exactly!)
+    private string walkParam = "isWalking1";
+    private string attackParam = "attack1";
+    private string dieParam = "die1";
+    private string kickLeftParam = "kickLeft";
+    private string kickRightParam = "kickRight";
 
     void Start()
     {
-        // Find the player
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
-        else
-        {
-            Debug.LogError("No player found with 'Player' tag!");
-        }
+        if (playerObj != null) player = playerObj.transform;
+        else Debug.LogError("❗ No player with tag 'Player' found.");
 
-        // Get components
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        // Set initial state
-        if (agent != null)
-        {
-            agent.stoppingDistance = attackRange;
-        }
+        if (agent != null) agent.stoppingDistance = attackRange;
 
-        // Set initial position based on type
-        if (positionType == PositionType.Random)
+        if (animator == null)
         {
-            SetRandomPosition();
+            Debug.LogError("❗ Animator not found on this object.");
         }
         else
         {
-            // Defined position is already set in the scene
-            isPositioned = true;
+            Debug.Log("✅ Animator found. Parameters available:");
+            foreach (var p in animator.parameters)
+                Debug.Log($"- {p.name} ({p.type})");
         }
+
+        if (positionType == PositionType.Random) SetRandomPosition();
+        else isPositioned = true;
     }
 
     void Update()
     {
-        if (isDead || player == null) return;
+        if (isDead || player == null || !isPositioned) return;
 
-        // Only start normal behavior once properly positioned
-        if (!isPositioned) return;
+        float distance = Vector3.Distance(transform.position, player.position);
+        bool near = distance <= detectionRange;
 
-        // Calculate distance to player
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        // Check if player is within detection range
-        if (distanceToPlayer <= detectionRange)
+        if (near)
         {
-            // Chase the player
             Chase();
 
-            // Check if close enough to attack
-            if (distanceToPlayer <= attackRange && canAttack)
-            {
+            if (distance <= attackRange && canAttack)
                 Attack();
-            }
         }
         else
         {
-            // Stop moving if player is out of range
             if (agent != null)
-            {
                 agent.SetDestination(transform.position);
 
-                // Update animation if you have walking animation
-                if (animator != null)
-                {
-                    animator.SetBool(walkParamName, false);
-                }
-            }
+            animator?.SetBool(walkParam, false);
         }
     }
 
@@ -116,51 +89,39 @@ public class GoblinAI : MonoBehaviour
     {
         if (agent == null) return;
 
-        // Try to find a valid position
-        for (int attempts = 0; attempts < 30; attempts++)
+        for (int i = 0; i < 30; i++)
         {
-            // Generate random position within area
-            Vector3 randomPos = new Vector3(
-                areaCenter.x + Random.Range(-areaSize.x / 2, areaSize.x / 2),
-                areaCenter.y,
-                areaCenter.z + Random.Range(-areaSize.z / 2, areaSize.z / 2)
+            Vector3 pos = areaCenter + new Vector3(
+                Random.Range(-areaSize.x / 2, areaSize.x / 2),
+                0,
+                Random.Range(-areaSize.z / 2, areaSize.z / 2)
             );
 
-            // Check if on NavMesh
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPos, out hit, 5f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             {
-                // Check distance from player
                 if (player != null && Vector3.Distance(hit.position, player.position) < minDistanceFromPlayer)
-                {
-                    continue; // Too close to player, try again
-                }
+                    continue;
 
-                // Check distance from other enemies
-                bool tooCloseToOtherEnemy = false;
-                foreach (GoblinAI otherGoblin in FindObjectsOfType<GoblinAI>())
+                bool tooClose = false;
+                foreach (GoblinAI other in FindObjectsOfType<GoblinAI>())
                 {
-                    if (otherGoblin != this && Vector3.Distance(hit.position, otherGoblin.transform.position) < minDistanceFromOtherEnemies)
+                    if (other != this && Vector3.Distance(hit.position, other.transform.position) < minDistanceFromOtherEnemies)
                     {
-                        tooCloseToOtherEnemy = true;
+                        tooClose = true;
                         break;
                     }
                 }
 
-                if (tooCloseToOtherEnemy)
+                if (!tooClose)
                 {
-                    continue; // Too close to another enemy, try again
+                    agent.Warp(hit.position);
+                    isPositioned = true;
+                    return;
                 }
-
-                // Position is valid, use it
-                agent.Warp(hit.position);
-                isPositioned = true;
-                return;
             }
         }
 
-        // If we couldn't find a valid position after all attempts
-        Debug.LogWarning("Could not find valid random position for goblin. Using current position.");
+        Debug.LogWarning("⚠️ Could not find valid random position.");
         isPositioned = true;
     }
 
@@ -169,89 +130,80 @@ public class GoblinAI : MonoBehaviour
         if (agent != null)
         {
             agent.SetDestination(player.position);
-
-            // Update animation if you have walking animation
-            if (animator != null && animator.parameters.Length > 0)
-            {
-                animator.SetBool(walkParamName, true);
-            }
+            animator?.SetBool(walkParam, true);
         }
     }
 
     void Attack()
     {
-        // Trigger attack animation if you have one
-        if (animator != null && animator.parameters.Length > 0)
+        canAttack = false;
+
+        int attackType = Random.Range(0, 3);
+        Debug.Log($"🗡️ Goblin attacking with type {attackType}");
+
+        if (animator != null)
         {
-            animator.SetTrigger(attackParamName);
+            switch (attackType)
+            {
+                case 0:
+                    animator.SetTrigger(attackParam);
+                    Debug.Log("🔁 Triggered: " + attackParam);
+                    break;
+                case 1:
+                    animator.SetTrigger(kickLeftParam);
+                    Debug.Log("🔁 Triggered: " + kickLeftParam);
+                    break;
+                case 2:
+                    animator.SetTrigger(kickRightParam);
+                    Debug.Log("🔁 Triggered: " + kickRightParam);
+                    break;
+            }
+
+            // Debug current animation state
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            Debug.Log("🎞️ Current State: " + stateInfo.fullPathHash);
         }
 
-        Debug.Log("Goblin attacks player for " + damage + " damage!");
-
-        // Start cooldown
         StartCoroutine(AttackCooldown());
     }
 
     IEnumerator AttackCooldown()
     {
-        canAttack = false;
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
     }
 
-    // You can call this from player attacks
     public void TakeDamage(float amount)
     {
         if (isDead) return;
 
         health -= amount;
-        Debug.Log("Goblin took " + amount + " damage! Health: " + health);
+        Debug.Log("💢 Goblin took " + amount + " damage.");
 
-        // Check if dead
         if (health <= 0)
-        {
             Die();
-        }
     }
 
     void Die()
     {
         isDead = true;
-        Debug.Log("Goblin died!");
+        Debug.Log("☠️ Goblin died.");
+        if (animator != null) animator.SetTrigger(dieParam);
+        if (agent != null) agent.enabled = false;
 
-        // Trigger death animation if you have one
-        if (animator != null && animator.parameters.Length > 0)
-        {
-            animator.SetTrigger(dieParamName);
-        }
-
-        // Disable the NavMeshAgent
-        if (agent != null)
-        {
-            agent.enabled = false;
-        }
-
-        // Disable collider
         Collider col = GetComponent<Collider>();
-        if (col != null)
-        {
-            col.enabled = false;
-        }
+        if (col != null) col.enabled = false;
 
-        // Destroy after delay
-        Destroy(gameObject, 3f); // Adjust time based on death animation length
+        Destroy(gameObject, 3f);
     }
 
-    // Visualize detection and attack ranges in editor
-    private void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
-        // Draw random position area
         if (positionType == PositionType.Random)
         {
             Gizmos.color = new Color(0, 1, 0, 0.3f);
