@@ -12,9 +12,22 @@ public class GoblinAI : MonoBehaviour
     [Header("Goblin Stats")]
     public float health = 30f;
     public float damage = 7f;
-    public float detectionRange = 10f;
+    public float detectionRange = 50f; // Increased detection range
     public float attackRange = 1.5f;
     public float attackCooldown = 0.5f;
+    
+    [Header("Movement Settings")]
+    public float moveSpeed = 3.5f;
+    public float rotationSpeed = 120f;
+    public float acceleration = 8f;
+    
+    // Public reference to player that can be set in inspector
+    public Transform playerDirectReference;
+    
+    // Manual player position (use this instead of trying to find player)
+    [Header("Manual Player Settings")]
+    public Vector3 manualPlayerPosition = new Vector3(-8.582f, 1.15f, -1.0f);
+    public bool useManualPosition = false; // Set to false to follow the actual player
 
     public enum PositionType { Defined, Random }
     public PositionType positionType = PositionType.Defined;
@@ -25,9 +38,14 @@ public class GoblinAI : MonoBehaviour
     public float minDistanceFromOtherEnemies = 2f;
     public float minDistanceFromPlayer = 5f;
 
+    // State management
+    private enum GoblinState { Idle, Chasing, Attacking }
+    private GoblinState currentState = GoblinState.Idle;
+    private float lastAttackTime = 0f;
+    
     private bool canAttack = true;
     private bool isDead = false;
-    private bool isPositioned = false;
+    private bool isPositioned = true; // Changed to true by default to ensure movement
 
     // Animator parameter names (must match Animator exactly!)
     private string walkParam = "isWalking1";
@@ -39,55 +57,255 @@ public class GoblinAI : MonoBehaviour
 
     void Start()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null) player = playerObj.transform;
-        else Debug.LogError("❗ No player with tag 'Player' found.");
-
+        // Get components
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-
-        if (agent != null) agent.stoppingDistance = attackRange;
-
-        if (animator == null)
-        {
-            Debug.LogError("❗ Animator not found on this object.");
+        
+        // Set up NavMeshAgent
+        if (agent != null) {
+            agent.speed = moveSpeed;
+            agent.angularSpeed = rotationSpeed;
+            agent.acceleration = acceleration;
+            agent.stoppingDistance = attackRange * 0.8f;
+        } else {
+            Debug.LogError("❗ NavMeshAgent component missing!");
         }
-        else
-        {
-            Debug.Log("✅ Animator found. Parameters available:");
-            foreach (var p in animator.parameters)
-                Debug.Log($"- {p.name} ({p.type})");
+        
+        // IMPORTANT: Find player using a reliable method
+        // First check if we have a direct reference
+        if (playerDirectReference != null) {
+            player = playerDirectReference;
+            Debug.Log("✅ Using direct player reference: " + player.name);
         }
-
+        // If no direct reference, try to find the Player component
+        else {
+            var playerComponent = FindObjectOfType<Player>();
+            if (playerComponent != null) {
+                // If the Player script has a Character reference, use that
+                if (playerComponent.Character != null) {
+                    player = playerComponent.Character.transform;
+                    Debug.Log("✅ Found player via Player.Character: " + player.name);
+                } 
+                // Otherwise use the Player GameObject itself
+                else {
+                    player = playerComponent.transform;
+                    Debug.Log("✅ Found player via Player component: " + player.name);
+                }
+            }
+            // If no Player component, try to find by tag
+            else {
+                GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+                if (playerObj != null) {
+                    player = playerObj.transform;
+                    Debug.Log("✅ Found player by tag: " + playerObj.name);
+                }
+                // If still not found, try to find KinematicCharacterMotor
+                else {
+                    var motor = FindObjectOfType<KinematicCharacterController.KinematicCharacterMotor>();
+                    if (motor != null) {
+                        player = motor.transform;
+                        Debug.Log("✅ Found player by KinematicCharacterMotor: " + player.name);
+                    }
+                    // Last resort - try CharacterController
+                    else {
+                        var cc = FindObjectOfType<CharacterController>();
+                        if (cc != null) {
+                            player = cc.transform;
+                            Debug.Log("✅ Found player by CharacterController: " + player.name);
+                        }
+                        // If all else fails, use manual position
+                        else if (useManualPosition) {
+                            GameObject tempObj = new GameObject("TempPlayerPosition");
+                            tempObj.transform.position = manualPlayerPosition;
+                            player = tempObj.transform;
+                            tempObj.hideFlags = HideFlags.HideAndDontSave;
+                            Debug.Log("⚠️ Using manual position as fallback");
+                        }
+                        else {
+                            Debug.LogError("❗ No player found! Please assign player manually.");
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Log what we found
+        if (player != null) {
+            Debug.Log($"🔍 FOUND PLAYER: {player.name} at position {player.position}");
+            
+            // IMPORTANT: Check if we found the wrong object at origin (0,0,0)
+            if (player.name == "Character" && player.position == Vector3.zero) {
+                Debug.LogWarning("⚠️ Found 'Character' at (0,0,0) - this is likely the wrong object!");
+                
+                // If we have manual position enabled, use that instead
+                if (useManualPosition) {
+                    GameObject tempObj = new GameObject("TempPlayerPosition");
+                    tempObj.transform.position = manualPlayerPosition;
+                    player = tempObj.transform;
+                    tempObj.hideFlags = HideFlags.HideAndDontSave;
+                    Debug.Log("⚠️ Switched to manual position instead");
+                }
+                // Otherwise try other methods
+                else {
+                    // Try to find by Player component again
+                    var playerComponent = FindObjectOfType<Player>();
+                    if (playerComponent != null) {
+                        player = playerComponent.transform;
+                        Debug.Log("✅ Switched to Player component: " + player.name);
+                    }
+                }
+            }
+        }
+        
+        // Set initial state
+        currentState = GoblinState.Idle;
+        lastAttackTime = -attackCooldown; // Allow immediate attack
+        
+        // Set initial position based on type
+        if (positionType == PositionType.Random) {
+            Vector3 randomPos = transform.position + new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5f, 5f));
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPos, out hit, 5f, NavMesh.AllAreas)) {
+                transform.position = hit.position;
+            }
+        }
+        else if (player == null) {
+            Debug.LogError("❗ No player found by any method. Goblins won't move!");
+        }
+        
+        // Force positioning to be true
+        isPositioned = true;
+        
+        // If using random positioning, set it
         if (positionType == PositionType.Random) SetRandomPosition();
-        else isPositioned = true;
     }
 
     void Update()
     {
-        if (isDead || player == null || !isPositioned) return;
-
-        float distance = Vector3.Distance(transform.position, player.position);
-        bool near = distance <= detectionRange;
-
-        float moveSpeed = agent.velocity.magnitude;
-        bool isMoving = moveSpeed > 0.05f;
-        bool shouldSprint = isMoving && GameObject.FindObjectsOfType<GoblinAI>().Length <= 3;
-
-        animator?.SetBool(walkParam, isMoving);
-        animator?.SetBool(sprintParam, shouldSprint);
-
-        if (near)
-        {
-            Chase();
-
-            if (distance <= attackRange && canAttack)
-                Attack();
+        // Early return checks with detailed logging
+        if (isDead) {
+            return;
         }
-        else
-        {
-            agent?.SetDestination(transform.position);
-            animator?.SetBool(walkParam, false);
+        
+        // Get the current player position
+        Vector3 targetPosition;
+        
+        // Always try to find the actual player first
+        if (player == null || Time.frameCount % 60 == 0) { // Re-check periodically
+            // Try direct reference first
+            if (playerDirectReference != null) {
+                player = playerDirectReference;
+                Debug.Log("✅ Using direct player reference");
+            } else {
+                // Try to find the player using the Player component
+                var playerComponent = FindObjectOfType<Player>();
+                if (playerComponent != null) {
+                    // If the Player component has a Character reference, use that
+                    if (playerComponent.Character != null) {
+                        player = playerComponent.Character.transform;
+                        Debug.Log("✅ Found player via Player.Character component");
+                    } else {
+                        // Otherwise use the Player GameObject itself
+                        player = playerComponent.transform;
+                        Debug.Log("✅ Found player via Player component");
+                    }
+                } else {
+                    // Try to find by tag
+                    GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+                    if (playerObj != null) {
+                        player = playerObj.transform;
+                        Debug.Log("✅ Found player by tag");
+                    } else {
+                        // Try to find by KinematicCharacterMotor
+                        var motor = FindObjectOfType<KinematicCharacterController.KinematicCharacterMotor>();
+                        if (motor != null) {
+                            player = motor.transform;
+                            Debug.Log("✅ Found player by KinematicCharacterMotor");
+                        } else {
+                            // If all else fails, use manual position
+                            if (useManualPosition) {
+                                if (player == null) {
+                                    GameObject tempObj = new GameObject("TempPlayerPosition");
+                                    tempObj.transform.position = manualPlayerPosition;
+                                    player = tempObj.transform;
+                                    tempObj.hideFlags = HideFlags.HideAndDontSave;
+                                }
+                                Debug.LogWarning("⚠️ Using manual position as fallback");
+                            } else {
+                                Debug.LogError("❗ No player found in Update!");
+                                return; // No player found
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // CRITICAL: Check if we found the wrong object at origin (0,0,0)
+            if (player.name == "Character" && player.position == Vector3.zero) {
+                Debug.LogWarning("⚠️ Found 'Character' at (0,0,0) - this is likely the wrong object!");
+                
+                // Try to find by Player component again
+                var playerComponent = FindObjectOfType<Player>();
+                if (playerComponent != null) {
+                    player = playerComponent.transform;
+                    Debug.Log("✅ Switched to Player component: " + player.name);
+                }
+            }
+        }
+        
+        // ALWAYS use the player's actual position - ignore manual position setting
+        // This is a temporary fix to ensure the orcs follow the player
+        if (player != null) {
+            targetPosition = player.position;
+            
+            // Debug what we're following
+            if (Time.frameCount % 60 == 0) {
+                Debug.Log($"🔍 FORCED FOLLOWING: {player.name} at position {player.position}");
+            }
+        } else {
+            // Only use manual position as a last resort
+            targetPosition = manualPlayerPosition;
+            Debug.LogWarning($"⚠️ FALLBACK to manual position: {manualPlayerPosition}");
+        }
+        
+        // Make sure agent is valid
+        if (agent == null) {
+            agent = GetComponent<NavMeshAgent>();
+            if (agent == null) {
+                Debug.LogError("❗ NavMeshAgent is missing!");
+                return;
+            }
+        }
+        
+        // Force agent settings every frame
+        agent.enabled = true;
+        agent.isStopped = false;
+        agent.autoBraking = false;
+        
+        // Calculate distance to target
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        
+        // Log distance information occasionally
+        if (Time.frameCount % 120 == 0) {
+            Debug.Log($"🔍 Goblin distance to target: {distance:F2}, Agent speed: {agent.speed}");
+        }
+
+        // ALWAYS chase the target - no distance check
+        agent.SetDestination(targetPosition);
+        
+        // Set animation parameters
+        if (animator != null) {
+            float moveSpeed = agent.velocity.magnitude;
+            bool isMoving = moveSpeed > 0.05f;
+            bool shouldSprint = isMoving && GameObject.FindObjectsOfType<GoblinAI>().Length <= 3;
+            
+            animator.SetBool(walkParam, isMoving);
+            animator.SetBool(sprintParam, shouldSprint);
+        }
+
+        // Only attack when in range
+        if (distance <= attackRange && canAttack) {
+            Attack();
         }
     }
 
@@ -131,13 +349,11 @@ public class GoblinAI : MonoBehaviour
         isPositioned = true;
     }
 
+    // We're now handling chase logic directly in Update
     void Chase()
     {
-        if (agent != null)
-        {
-            agent.SetDestination(player.position);
-            animator?.SetBool(walkParam, true);
-        }
+        // This method is kept for compatibility but not used
+        // Chase logic is now in Update for more direct control
     }
 
     void Attack()
