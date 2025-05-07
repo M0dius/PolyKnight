@@ -1,35 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class Player : MonoBehaviour
-{
+//public class Player : MonoBehaviour
+//{
 
-    public int maxHealth = 100;
-    public int currentHealth;
+//    public int maxHealth = 100;
+//    public int currentHealth;
 
-    public Health healthBar;
+//    public Health healthBar;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
-    }
+//    // Start is called before the first frame update
+//    void Start()
+//    {
+//        currentHealth = maxHealth;
+//        healthBar.SetMaxHealth(maxHealth);
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(10);
-        }
-    }
+//    // Update is called once per frame
+//    void Update()
+//    {
+//        if (Input.GetKeyDown(KeyCode.Space))
+//        {
+//            TakeDamage(10);
+//        }
+//    }
 
-    void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
+//    void TakeDamage(int damage)
+//    {
+//        currentHealth -= damage;
 
-        healthBar.SetHealth(currentHealth);
-    }
-}
+//        healthBar.SetHealth(currentHealth);
+//    }
+//}
