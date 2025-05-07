@@ -1277,6 +1277,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   attackDuration: 0.5
+  isAttacking: 0
+  attackTimer: 0
 --- !u!114 &2001487423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1291,6 +1293,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   attackDuration: 0.5
+  isAttacking: 0
+  attackTimer: 0
 --- !u!114 &2001487424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1305,6 +1309,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   attackDuration: 0.5
+  isAttacking: 0
+  attackTimer: 0
 --- !u!114 &2001487425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1319,6 +1325,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   attackDuration: 0.5
+  isAttacking: 0
+  attackTimer: 0
 --- !u!1 &2063007860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1449,6 +1457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba1d77e038c147149940f78eb26c0ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myAnimator: {fileID: 0}
 --- !u!95 &2103492579
 Animator:
   serializedVersion: 5
@@ -1483,14 +1492,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 2
+  verticalRotation: 0
+  cameraTransform: {fileID: 0}
+  rb: {fileID: 0}
   MoveSpeed: 5
   RunSpeed: 10
+  isRunning: 0
+  moveHorizontal: 0
+  moveForward: 0
   jumpForce: 10
   fallMultiplier: 2.5
   ascendMultiplier: 2
+  isGrounded: 1
   groundLayer:
-    serializedVersion: 2
     m_Bits: 8
+  groundCheckTimer: 0
+  groundCheckDelay: 0.3
+  playerHeight: 0
+  raycastDistance: 0
+  playerAnimator: {fileID: 0}
 --- !u!4 &2103492581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 993bbd2ab6c8a51418791320cda18446, type: 3}
@@ -1523,15 +1543,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 2
+  verticalRotation: 0
+  cameraTransform: {fileID: 0}
+  rb: {fileID: 0}
   MoveSpeed: 5
   RunSpeed: 10
+  isRunning: 0
+  moveHorizontal: 0
+  moveForward: 0
   jumpForce: 10
   fallMultiplier: 2.5
   ascendMultiplier: 2
+  isGrounded: 1
   groundLayer:
-    serializedVersion: 2
     m_Bits: 0
+  groundCheckTimer: 0
+  groundCheckDelay: 0.3
+  playerHeight: 0
+  raycastDistance: 0
+  playerAnimator: {fileID: 0}
   attackDuration: 0.5
+  isAttacking: 0
+  attackTimer: 0
 --- !u!114 &2103492584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1546,3 +1579,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 2103492579}
   attackDuration: 0.5
+  isAttacking: 0
+  attackTimer: 0
