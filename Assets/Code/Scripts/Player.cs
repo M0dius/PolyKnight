@@ -1,145 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using KinematicCharacterController;
 
 public class Player : MonoBehaviour
 {
-    // Camera Rotation
-    public float mouseSensitivity = 2f;
-    private float verticalRotation = 0f;
-    private Transform cameraTransform;
-
-    // Ground Movement
-    private Rigidbody rb;
-    public float MoveSpeed = 5f;
+    public CustomCharacterCamera OrbitCamera;
+    public Transform CameraFollowPoint;
+    public CharacterController Character;
     
-    // Running
-    public float RunSpeed = 10f;
-    private bool isRunning = false;
+    private const string HorizontalInput = "Horizontal";
+    private const string VerticalInput = "Vertical";
 
-    private float moveHorizontal;
-    private float moveForward;
-
-    // Jumping
-    public float jumpForce = 10f;
-    public float fallMultiplier = 2.5f;
-    public float ascendMultiplier = 2f;
-    private bool isGrounded = true;
-    public LayerMask groundLayer;
-    private float groundCheckTimer = 0f;
-    private float groundCheckDelay = 0.3f;
-    private float playerHeight;
-    private float raycastDistance;
-
-    private Animator playerAnimator;
-
-    void Start()
+    private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-        cameraTransform = Camera.main.transform;
-        playerAnimator = GetComponent<Animator>();
-
-        playerHeight = GetComponent<CapsuleCollider>().height * transform.localScale.y;
-        raycastDistance = (playerHeight / 2) + 0.2f;
-
+        // Lock the cursor
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+
+        // Tell camera to follow transform
+        OrbitCamera.SetFollowTransform(CameraFollowPoint);
     }
 
-    void Update()
+    private void Update()
     {
-        moveHorizontal = Input.GetAxisRaw("Horizontal");
-        moveForward = Input.GetAxisRaw("Vertical");
-
-        RotateCamera();
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            Jump();
-        }
-
-        if (!isGrounded && groundCheckTimer <= 0f)
-        {
-            Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
-            isGrounded = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, groundLayer);
-        }
-        else
-        {
-            groundCheckTimer -= Time.deltaTime;
-        }
+        HandleCharacterInput();
+    }
+    
+    private void LateUpdate()
+    {
+        HandleCameraInput();
     }
 
-    void FixedUpdate()
+    private void HandleCameraInput()
     {
-        MovePlayer();
-        ApplyJumpPhysics();
+        // Apply inputs to the camera
+        OrbitCamera.UpdateWithInput(Time.deltaTime, Vector3.zero);
     }
-
-    void MovePlayer()
+    
+    private void HandleCharacterInput()
     {
-        Vector3 movement = (transform.right * moveHorizontal + transform.forward * moveForward).normalized;
+        PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
-        isRunning = Input.GetKey(KeyCode.LeftShift);
-        float currentSpeed = isRunning ? RunSpeed : MoveSpeed;
+        // Build the CharacterInputs struct
+        characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
+        characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);
 
-        Vector3 targetVelocity = movement * currentSpeed;
-
-        Vector3 velocity = rb.velocity;
-        velocity.x = targetVelocity.x;
-        velocity.z = targetVelocity.z;
-        rb.velocity = velocity;
-
-        bool isMoving = isGrounded && (moveHorizontal != 0 || moveForward != 0);
-
-        if (!isMoving)
-        {
-            playerAnimator.SetBool("isWalking", false);
-            playerAnimator.SetBool("isRunning", false);
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-        }
-        else
-        {
-            if (isRunning)
-            {
-                playerAnimator.SetBool("isRunning", true);
-                playerAnimator.SetBool("isWalking", false);
-            }
-            else
-            {
-                playerAnimator.SetBool("isRunning", false);
-                playerAnimator.SetBool("isWalking", true);
-            }
-        }
-    }
-
-    void RotateCamera()
-    {
-        float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivity;
-        transform.Rotate(0, horizontalRotation, 0);
-
-        verticalRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
-
-        cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
-    }
-
-    void Jump()
-    {
-        isGrounded = false;
-        groundCheckTimer = groundCheckDelay;
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-    }
-
-    void ApplyJumpPhysics()
-    {
-        if (rb.velocity.y < 0)
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * fallMultiplier * Time.fixedDeltaTime;
-        }
-        else if (rb.velocity.y > 0)
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * ascendMultiplier * Time.fixedDeltaTime;
-        }
+        // Apply inputs to character
+        Character.SetInputs(ref characterInputs);
     }
 }
