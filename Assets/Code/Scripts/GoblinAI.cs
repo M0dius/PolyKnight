@@ -14,7 +14,7 @@ public class GoblinAI : MonoBehaviour
     public float damage = 7f;
     public float detectionRange = 50f; // Increased detection range
     public float attackRange = 1.5f;
-    public float attackCooldown = 0.5f;
+    public float attackCooldown = 2f; // Increased to make attacks more visible
     
     [Header("Movement Settings")]
     public float moveSpeed = 3.5f;
@@ -43,9 +43,9 @@ public class GoblinAI : MonoBehaviour
     private GoblinState currentState = GoblinState.Idle;
     private float lastAttackTime = 0f;
     
-    private bool canAttack = true;
     private bool isDead = false;
     private bool isPositioned = true; // Changed to true by default to ensure movement
+    private float nextAttackTime = 0f; // Time-based attack system instead of boolean flag
 
     // Animator parameter names (must match Animator exactly!)
     private string walkParam = "isWalking1";
@@ -258,10 +258,8 @@ public class GoblinAI : MonoBehaviour
         if (player != null) {
             targetPosition = player.position;
             
-            // Debug what we're following
-            if (Time.frameCount % 60 == 0) {
-                Debug.Log($"🔍 FORCED FOLLOWING: {player.name} at position {player.position}");
-            }
+            // Only log when debugging is needed
+            // Debug.Log($"Following: {player.name}");
         } else {
             // Only use manual position as a last resort
             targetPosition = manualPlayerPosition;
@@ -285,10 +283,10 @@ public class GoblinAI : MonoBehaviour
         // Calculate distance to target
         float distance = Vector3.Distance(transform.position, targetPosition);
         
-        // Log distance information occasionally
-        if (Time.frameCount % 120 == 0) {
-            Debug.Log($"🔍 Goblin distance to target: {distance:F2}, Agent speed: {agent.speed}");
-        }
+        // Reduced logging
+        // if (Time.frameCount % 600 == 0) {
+        //     Debug.Log($"Goblin distance: {distance:F2}");
+        // }
 
         // ALWAYS chase the target - no distance check
         agent.SetDestination(targetPosition);
@@ -303,9 +301,20 @@ public class GoblinAI : MonoBehaviour
             animator.SetBool(sprintParam, shouldSprint);
         }
 
-        // Only attack when in range
-        if (distance <= attackRange && canAttack) {
-            Attack();
+        // Attack when in range using time-based cooldown
+        if (distance <= attackRange) {
+            // Check if enough time has passed since last attack
+            if (Time.time >= nextAttackTime) {
+                Attack();
+                // Set the next attack time
+                nextAttackTime = Time.time + attackCooldown;
+            }
+            
+            // Debug the attack state
+            if (Time.frameCount % 60 == 0) {
+                float remainingCooldown = Mathf.Max(0, nextAttackTime - Time.time);
+                Debug.Log($"[GoblinAI] In attack range, cooldown remaining: {remainingCooldown:F1}s");
+            }
         }
     }
 
@@ -358,40 +367,72 @@ public class GoblinAI : MonoBehaviour
 
     void Attack()
     {
-        canAttack = false;
-
         int attackType = Random.Range(0, 3);
-        Debug.Log($"🗡️ Goblin attacking with type {attackType}");
+        Debug.Log($"[GoblinAI] Attacking with type {attackType}, next attack in {attackCooldown}s");
+        
+        // APPLY DAMAGE TO PLAYER
+        if (player != null)
+        {
+            // Try to find PlayerHealth component on the player or parent/children
+            PlayerHealth playerHealth = null;
+            
+            // Check player GameObject first
+            playerHealth = player.GetComponent<PlayerHealth>();
+            
+            // If not found, check parent
+            if (playerHealth == null && player.parent != null)
+                playerHealth = player.parent.GetComponent<PlayerHealth>();
+                
+            // If still not found, check children
+            if (playerHealth == null)
+                playerHealth = player.GetComponentInChildren<PlayerHealth>();
+                
+            // If found, apply damage directly
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+                Debug.Log($"[GoblinAI] Applied {damage} damage to player health!");
+            }
+            else
+            {
+                // Last resort: try to find PlayerHealth in the scene
+                playerHealth = FindObjectOfType<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damage);
+                    Debug.Log($"[GoblinAI] Applied {damage} damage to player health (found in scene)!");
+                }
+                else
+                {
+                    Debug.LogWarning("[GoblinAI] Could not find PlayerHealth component!");
+                }
+            }
+        }
 
+        // Play attack animation
         if (animator != null)
         {
             switch (attackType)
             {
                 case 0:
                     animator.SetTrigger(attackParam);
-                    Debug.Log("🔁 Triggered: " + attackParam);
                     break;
                 case 1:
                     animator.SetTrigger(kickLeftParam);
-                    Debug.Log("🔁 Triggered: " + kickLeftParam);
                     break;
                 case 2:
                     animator.SetTrigger(kickRightParam);
-                    Debug.Log("🔁 Triggered: " + kickRightParam);
                     break;
             }
-
-            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            Debug.Log("🎞️ Current State: " + stateInfo.fullPathHash);
         }
 
         StartCoroutine(AttackCooldown());
     }
 
+    // No longer needed - using time-based system instead
     IEnumerator AttackCooldown()
     {
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
+        yield break;
     }
 
     public void TakeDamage(float amount)
