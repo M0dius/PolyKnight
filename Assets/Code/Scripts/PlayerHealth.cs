@@ -124,7 +124,34 @@ public class PlayerHealth : MonoBehaviour
         
         // For now, just disable the player
         gameObject.SetActive(false);
+
+
+
+LevelManager levelManager = FindObjectOfType<LevelManager>();
+    if (levelManager != null)
+    {
+        levelManager.PlayerDied();
     }
+    else
+    {
+        Debug.LogError("❌ LevelManager not found!");
+        // For testing, just disable the player
+        gameObject.SetActive(false);
+    }
+
+    }
+
+    public void ResetHealth()
+{
+    currentHealth = maxHealth;
+    
+    if (healthBar != null)
+    {
+        healthBar.SetHealth(currentHealth);
+    }
+    
+    Debug.Log("[PlayerHealth] Health reset to full");
+}
     
     // Optional: Add health pickup method
     public void AddHealth(int amount)
