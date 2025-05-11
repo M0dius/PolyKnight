@@ -48,9 +48,9 @@ public class GoblinAI : MonoBehaviour
     private float nextAttackTime = 0f; // Time-based attack system instead of boolean flag
 
     // Animator parameter names (must match Animator exactly!)
-    private string walkParam = "isWalking1";
+    private string walkParam = "isWalking";
     private string sprintParam = "isSprinting";
-    private string attackParam = "attack1";
+    private string attackParam = "attack";
     private string dieParam = "die1";
     private string kickLeftParam = "kickLeft";
     private string kickRightParam = "kickRight";
