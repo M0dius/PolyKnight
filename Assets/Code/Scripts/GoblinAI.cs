@@ -376,7 +376,7 @@ public class GoblinAI : MonoBehaviour
             // Try to find PlayerHealth component on the player or parent/children
             PlayerHealth playerHealth = null;
             
-            // Check player GameObject first
+            // Try direct component
             playerHealth = player.GetComponent<PlayerHealth>();
             
             // If not found, check parent
@@ -387,6 +387,13 @@ public class GoblinAI : MonoBehaviour
             if (playerHealth == null)
                 playerHealth = player.GetComponentInChildren<PlayerHealth>();
                 
+            // Last resort: try to find PlayerHealth in the scene
+            if (playerHealth == null)
+            {
+                playerHealth = FindObjectOfType<PlayerHealth>();
+                Debug.Log("[GoblinAI] Attempting to find PlayerHealth component in scene");
+            }
+                
             // If found, apply damage directly
             if (playerHealth != null)
             {
@@ -395,17 +402,7 @@ public class GoblinAI : MonoBehaviour
             }
             else
             {
-                // Last resort: try to find PlayerHealth in the scene
-                playerHealth = FindObjectOfType<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damage);
-                    Debug.Log($"[GoblinAI] Applied {damage} damage to player health (found in scene)!");
-                }
-                else
-                {
-                    Debug.LogWarning("[GoblinAI] Could not find PlayerHealth component!");
-                }
+                Debug.LogWarning("[GoblinAI] Could not find PlayerHealth component!");
             }
         }
 
