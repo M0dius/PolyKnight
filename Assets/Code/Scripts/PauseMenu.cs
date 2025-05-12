@@ -7,10 +7,8 @@ public class PauseMenu : MonoBehaviour
 {
 
     public static bool GameIsPaused = false;
-
     public GameObject pauseMenuUI;
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -31,6 +29,8 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
+        Cursor.lockState = CursorLockMode.Locked; // Lock cursor on resume
+        Cursor.visible = false;
     }
 
     void Pause()
@@ -38,14 +38,15 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
+        Cursor.lockState = CursorLockMode.None;   // Unlock cursor on pause
+        Cursor.visible = true;                  // Make cursor visible
     }
 
     public void LoadMenu()
     {
-        Time.timeScale = 1f; // Resume the game before loading the menu
+        Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
         Debug.Log("Loading menu...");
-        // Load the menu scene here
     }
 
     public void QuitGame()
@@ -60,9 +61,5 @@ public class PauseMenu : MonoBehaviour
         SceneTracker.previousScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene("Settings");
         Debug.Log("Loading settings menu...");
-        // Load the settings scene here
-        // Resume the game before loading the settings menu
-
-
     }
 }

@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         // Lock the cursor
-        Cursor.lockState = CursorLockMode.Locked;
+       // Cursor.lockState = CursorLockMode.Locked;
 
         // Tell camera to follow transform
         OrbitCamera.SetFollowTransform(CameraFollowPoint);
