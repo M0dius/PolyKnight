@@ -68,14 +68,14 @@ public class GoblinAI : MonoBehaviour
             agent.acceleration = acceleration;
             agent.stoppingDistance = attackRange * 0.8f;
         } else {
-            Debug.LogError("❗ NavMeshAgent component missing!");
+            // Debug.LogError("❗ NavMeshAgent component missing!");
         }
         
         // IMPORTANT: Find player using a reliable method
         // First check if we have a direct reference
         if (playerDirectReference != null) {
             player = playerDirectReference;
-            Debug.Log("✅ Using direct player reference: " + player.name);
+            // Debug.Log("✅ Using direct player reference: " + player.name);
         }
         // If no direct reference, try to find the Player component
         else {
@@ -84,12 +84,12 @@ public class GoblinAI : MonoBehaviour
                 // If the Player script has a Character reference, use that
                 if (playerComponent.Character != null) {
                     player = playerComponent.Character.transform;
-                    Debug.Log("✅ Found player via Player.Character: " + player.name);
+                    // Debug.Log("✅ Found player via Player.Character: " + player.name);
                 } 
                 // Otherwise use the Player GameObject itself
                 else {
                     player = playerComponent.transform;
-                    Debug.Log("✅ Found player via Player component: " + player.name);
+                    // Debug.Log("✅ Found player via Player component: " + player.name);
                 }
             }
             // If no Player component, try to find by tag
@@ -97,21 +97,21 @@ public class GoblinAI : MonoBehaviour
                 GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
                 if (playerObj != null) {
                     player = playerObj.transform;
-                    Debug.Log("✅ Found player by tag: " + playerObj.name);
+                    // Debug.Log("✅ Found player by tag: " + playerObj.name);
                 }
                 // If still not found, try to find KinematicCharacterMotor
                 else {
                     var motor = FindObjectOfType<KinematicCharacterController.KinematicCharacterMotor>();
                     if (motor != null) {
                         player = motor.transform;
-                        Debug.Log("✅ Found player by KinematicCharacterMotor: " + player.name);
+                        // Debug.Log("✅ Found player by KinematicCharacterMotor: " + player.name);
                     }
                     // Last resort - try CharacterController
                     else {
                         var cc = FindObjectOfType<CharacterController>();
                         if (cc != null) {
                             player = cc.transform;
-                            Debug.Log("✅ Found player by CharacterController: " + player.name);
+                            // Debug.Log("✅ Found player by CharacterController: " + player.name);
                         }
                         // If all else fails, use manual position
                         else if (useManualPosition) {
@@ -119,10 +119,10 @@ public class GoblinAI : MonoBehaviour
                             tempObj.transform.position = manualPlayerPosition;
                             player = tempObj.transform;
                             tempObj.hideFlags = HideFlags.HideAndDontSave;
-                            Debug.Log("⚠️ Using manual position as fallback");
+                            // Debug.Log("⚠️ Using manual position as fallback");
                         }
                         else {
-                            Debug.LogError("❗ No player found! Please assign player manually.");
+                            // Debug.LogError("❗ No player found! Please assign player manually.");
                         }
                     }
                 }
@@ -131,11 +131,11 @@ public class GoblinAI : MonoBehaviour
         
         // Log what we found
         if (player != null) {
-            Debug.Log($"🔍 FOUND PLAYER: {player.name} at position {player.position}");
+            // Debug.Log($"🔍 FOUND PLAYER: {player.name} at position {player.position}");
             
             // IMPORTANT: Check if we found the wrong object at origin (0,0,0)
             if (player.name == "Character" && player.position == Vector3.zero) {
-                Debug.LogWarning("⚠️ Found 'Character' at (0,0,0) - this is likely the wrong object!");
+                // Debug.LogWarning("⚠️ Found 'Character' at (0,0,0) - this is likely the wrong object!");
                 
                 // If we have manual position enabled, use that instead
                 if (useManualPosition) {
@@ -143,7 +143,7 @@ public class GoblinAI : MonoBehaviour
                     tempObj.transform.position = manualPlayerPosition;
                     player = tempObj.transform;
                     tempObj.hideFlags = HideFlags.HideAndDontSave;
-                    Debug.Log("⚠️ Switched to manual position instead");
+                    // Debug.Log("⚠️ Switched to manual position instead");
                 }
                 // Otherwise try other methods
                 else {
@@ -151,7 +151,7 @@ public class GoblinAI : MonoBehaviour
                     var playerComponent = FindObjectOfType<Player>();
                     if (playerComponent != null) {
                         player = playerComponent.transform;
-                        Debug.Log("✅ Switched to Player component: " + player.name);
+                        // Debug.Log("✅ Switched to Player component: " + player.name);
                     }
                 }
             }
@@ -170,7 +170,7 @@ public class GoblinAI : MonoBehaviour
             }
         }
         else if (player == null) {
-            Debug.LogError("❗ No player found by any method. Goblins won't move!");
+            // Debug.LogError("❗ No player found by any method. Goblins won't move!");
         }
         
         // Force positioning to be true
@@ -195,7 +195,7 @@ public class GoblinAI : MonoBehaviour
             // Try direct reference first
             if (playerDirectReference != null) {
                 player = playerDirectReference;
-                Debug.Log("✅ Using direct player reference");
+                // Debug.Log("✅ Using direct player reference");
             } else {
                 // Try to find the player using the Player component
                 var playerComponent = FindObjectOfType<Player>();
@@ -203,24 +203,24 @@ public class GoblinAI : MonoBehaviour
                     // If the Player component has a Character reference, use that
                     if (playerComponent.Character != null) {
                         player = playerComponent.Character.transform;
-                        Debug.Log("✅ Found player via Player.Character component");
+                        // Debug.Log("✅ Found player via Player.Character component");
                     } else {
                         // Otherwise use the Player GameObject itself
                         player = playerComponent.transform;
-                        Debug.Log("✅ Found player via Player component");
+                        // Debug.Log("✅ Found player via Player component");
                     }
                 } else {
                     // Try to find by tag
                     GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
                     if (playerObj != null) {
                         player = playerObj.transform;
-                        Debug.Log("✅ Found player by tag");
+                        // Debug.Log("✅ Found player by tag");
                     } else {
                         // Try to find by KinematicCharacterMotor
                         var motor = FindObjectOfType<KinematicCharacterController.KinematicCharacterMotor>();
                         if (motor != null) {
                             player = motor.transform;
-                            Debug.Log("✅ Found player by KinematicCharacterMotor");
+                            // Debug.Log("✅ Found player by KinematicCharacterMotor");
                         } else {
                             // If all else fails, use manual position
                             if (useManualPosition) {
@@ -230,9 +230,9 @@ public class GoblinAI : MonoBehaviour
                                     player = tempObj.transform;
                                     tempObj.hideFlags = HideFlags.HideAndDontSave;
                                 }
-                                Debug.LogWarning("⚠️ Using manual position as fallback");
+                                // Debug.LogWarning("⚠️ Using manual position as fallback");
                             } else {
-                                Debug.LogError("❗ No player found in Update!");
+                                // Debug.LogError("❗ No player found in Update!");
                                 return; // No player found
                             }
                         }
@@ -242,13 +242,13 @@ public class GoblinAI : MonoBehaviour
             
             // CRITICAL: Check if we found the wrong object at origin (0,0,0)
             if (player.name == "Character" && player.position == Vector3.zero) {
-                Debug.LogWarning("⚠️ Found 'Character' at (0,0,0) - this is likely the wrong object!");
+                // Debug.LogWarning("⚠️ Found 'Character' at (0,0,0) - this is likely the wrong object!");
                 
                 // Try to find by Player component again
                 var playerComponent = FindObjectOfType<Player>();
                 if (playerComponent != null) {
                     player = playerComponent.transform;
-                    Debug.Log("✅ Switched to Player component: " + player.name);
+                    // Debug.Log("✅ Switched to Player component: " + player.name);
                 }
             }
         }
@@ -263,14 +263,14 @@ public class GoblinAI : MonoBehaviour
         } else {
             // Only use manual position as a last resort
             targetPosition = manualPlayerPosition;
-            Debug.LogWarning($"⚠️ FALLBACK to manual position: {manualPlayerPosition}");
+            // Debug.LogWarning($"⚠️ FALLBACK to manual position: {manualPlayerPosition}");
         }
         
         // Make sure agent is valid
         if (agent == null) {
             agent = GetComponent<NavMeshAgent>();
             if (agent == null) {
-                Debug.LogError("❗ NavMeshAgent is missing!");
+                // Debug.LogError("❗ NavMeshAgent is missing!");
                 return;
             }
         }
@@ -313,7 +313,7 @@ public class GoblinAI : MonoBehaviour
             // Debug the attack state
             if (Time.frameCount % 60 == 0) {
                 float remainingCooldown = Mathf.Max(0, nextAttackTime - Time.time);
-                Debug.Log($"[GoblinAI] In attack range, cooldown remaining: {remainingCooldown:F1}s");
+                // Debug.Log($"[GoblinAI] In attack range, cooldown remaining: {remainingCooldown:F1}s");
             }
         }
     }
@@ -354,7 +354,7 @@ public class GoblinAI : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("⚠️ Could not find valid random position.");
+        // Debug.LogWarning("⚠️ Could not find valid random position.");
         isPositioned = true;
     }
 
@@ -368,7 +368,7 @@ public class GoblinAI : MonoBehaviour
     void Attack()
     {
         int attackType = Random.Range(0, 3);
-        Debug.Log($"[GoblinAI] Attacking with type {attackType}, next attack in {attackCooldown}s");
+        // Debug.Log($"[GoblinAI] Attacking with type {attackType}, next attack in {attackCooldown}s");
         
         // APPLY DAMAGE TO PLAYER
         if (player != null)
@@ -376,7 +376,7 @@ public class GoblinAI : MonoBehaviour
             // Try to find PlayerHealth component on the player or parent/children
             PlayerHealth playerHealth = null;
             
-            // Check player GameObject first
+            // Try direct component
             playerHealth = player.GetComponent<PlayerHealth>();
             
             // If not found, check parent
@@ -387,6 +387,13 @@ public class GoblinAI : MonoBehaviour
             if (playerHealth == null)
                 playerHealth = player.GetComponentInChildren<PlayerHealth>();
                 
+            // Last resort: try to find PlayerHealth in the scene
+            if (playerHealth == null)
+            {
+                playerHealth = FindObjectOfType<PlayerHealth>();
+                Debug.Log("[GoblinAI] Attempting to find PlayerHealth component in scene");
+            }
+                
             // If found, apply damage directly
             if (playerHealth != null)
             {
@@ -395,17 +402,7 @@ public class GoblinAI : MonoBehaviour
             }
             else
             {
-                // Last resort: try to find PlayerHealth in the scene
-                playerHealth = FindObjectOfType<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damage);
-                    Debug.Log($"[GoblinAI] Applied {damage} damage to player health (found in scene)!");
-                }
-                else
-                {
-                    Debug.LogWarning("[GoblinAI] Could not find PlayerHealth component!");
-                }
+                Debug.LogWarning("[GoblinAI] Could not find PlayerHealth component!");
             }
         }
 
