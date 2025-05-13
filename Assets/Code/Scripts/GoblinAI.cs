@@ -5,6 +5,12 @@ using UnityEngine.AI;
 
 public class GoblinAI : MonoBehaviour
 {
+    [Header("Effects")]
+    public ParticleSystem deathEffectPrefab;
+    public Transform bloodSpawnPoint;
+    [Tooltip("Rotation offset for the blood splatter effect")]
+    public Vector3 bloodRotationOffset = new Vector3(-90, 0, 0); // Default for floor-oriented splatter
+    
     private Transform player;
     private NavMeshAgent agent;
     private Animator animator;
@@ -15,12 +21,6 @@ public class GoblinAI : MonoBehaviour
     public float detectionRange = 50f; // Increased detection range
     public float attackRange = 1.5f;
     public float attackCooldown = 2f; // Increased to make attacks more visible
-    
-    [Header("Effects")]
-    public ParticleSystem deathEffectPrefab;
-    public Transform bloodSpawnPoint;
-    [Tooltip("Rotation offset for the blood splatter effect")]
-    public Vector3 bloodRotationOffset = new Vector3(-90, 0, 0); // Default for floor-oriented splatter
 
     [Header("Movement Settings")]
     public float moveSpeed = 3.5f;
@@ -472,6 +472,12 @@ public bool isDead = false;
         // Disable collider
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
+        
+        // Check if this is the last enemy in the level
+        if (isLastEnemy || (useAutoLastEnemy && IsLastEnemyInLevel()))
+        {
+            DropKey();
+        }
 
         // Destroy the goblin after delay
         Destroy(gameObject, 3f);
@@ -600,5 +606,7 @@ void DropKey()
         Debug.LogWarning("⚠️ Key prefab not assigned to GoblinAI!");
     }
 }
+
+
 
 }

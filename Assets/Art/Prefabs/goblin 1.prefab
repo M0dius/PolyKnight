@@ -657,7 +657,7 @@ Transform:
   m_GameObject: {fileID: 8991118669083065785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 3.05}
+  m_LocalPosition: {x: 1.5, y: 0, z: 0.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -745,17 +745,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 257273086190342323, guid: 1c8d44889e2e72045a5920d205deb2fd, type: 3}
+  bloodSpawnPoint: {fileID: 3290288666208145552}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 10
   attackRange: 1.5
   attackCooldown: 1.5
-  deathEffectPrefab: {fileID: 257273086190342323, guid: 1c8d44889e2e72045a5920d205deb2fd, type: 3}
-  bloodSpawnPoint: {fileID: 3290288666208145552}
-  bloodRotationOffset: {x: -90, y: 0, z: 0}
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -764,3 +767,4 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
