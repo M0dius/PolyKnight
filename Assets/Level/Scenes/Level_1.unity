@@ -2864,6 +2864,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8421687291117114520, guid: 0a5234344519e4c6e951af175e304fc8, type: 3}
+      propertyPath: keyPrefab
+      value: 
+      objectReference: {fileID: 374289202576707483, guid: 78df1db2fbc8ec64f949fac0c05bf693, type: 3}
+    - target: {fileID: 8421687291117114520, guid: 0a5234344519e4c6e951af175e304fc8, type: 3}
+      propertyPath: isLastEnemy
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8991118669083065785, guid: 0a5234344519e4c6e951af175e304fc8, type: 3}
       propertyPath: m_Name
       value: goblin 1 (1)
