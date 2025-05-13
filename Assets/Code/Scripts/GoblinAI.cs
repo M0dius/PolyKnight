@@ -5,6 +5,12 @@ using UnityEngine.AI;
 
 public class GoblinAI : MonoBehaviour
 {
+    [Header("Effects")]
+    public ParticleSystem deathEffectPrefab;
+    public Transform bloodSpawnPoint;
+    [Tooltip("Rotation offset for the blood splatter effect")]
+    public Vector3 bloodRotationOffset = new Vector3(-90, 0, 0); // Default for floor-oriented splatter
+    
     private Transform player;
     private NavMeshAgent agent;
     private Animator animator;
@@ -453,6 +459,10 @@ public bool isDead = false;
 {
     isDead = true;
     Debug.Log("☠️ Goblin died.");
+    
+    // Spawn blood effect
+    SpawnBloodEffect();
+    
     if (animator != null) animator.SetTrigger(dieParam);
     if (agent != null) agent.enabled = false;
 
@@ -529,6 +539,66 @@ void DropKey()
     else
     {
         Debug.LogWarning("⚠️ Key prefab not assigned to GoblinAI!");
+    }
+}
+
+// Spawns the blood effect at the appropriate position and rotation
+private void SpawnBloodEffect()
+{
+    if (deathEffectPrefab != null)
+    {
+        // Determine spawn position
+        Vector3 spawnPos;
+        if (bloodSpawnPoint != null)
+        {
+            spawnPos = bloodSpawnPoint.position;
+        }
+        else
+        {
+            // Fallback: Use raycast to find ground below goblin
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f))
+            {
+                // Position slightly above the hit point to avoid clipping
+                spawnPos = hit.point + hit.normal * 0.05f;
+                Debug.Log("💉 Blood effect spawned at ground position: " + spawnPos);
+            }
+            else
+            {
+                // If no ground found, use a position slightly below the goblin
+                spawnPos = transform.position + Vector3.down * 0.5f;
+                Debug.Log("💉 Blood effect spawned at fallback position: " + spawnPos);
+            }
+        }
+
+        // Create rotation that aligns with the ground or uses the specified offset
+        Quaternion bloodRotation = Quaternion.Euler(bloodRotationOffset);
+
+        // Instantiate and play the particle effect
+        var bloodEffect = Instantiate(deathEffectPrefab, spawnPos, bloodRotation);
+        bloodEffect.Play();
+
+        // Calculate total lifetime including particle duration and max particle lifetime
+        float maxLifetime = bloodEffect.main.duration;
+        if (bloodEffect.main.startLifetime.mode == ParticleSystemCurveMode.Constant)
+        {
+            maxLifetime += bloodEffect.main.startLifetime.constant;
+        }
+        else if (bloodEffect.main.startLifetime.mode == ParticleSystemCurveMode.TwoConstants)
+        {
+            maxLifetime += bloodEffect.main.startLifetime.constantMax;
+        }
+
+        // Add a small buffer to ensure all particles are gone
+        maxLifetime += 1f;
+
+        // Clean up the effect after it completes
+        Destroy(bloodEffect.gameObject, maxLifetime);
+        Debug.Log("💉 Blood effect will be destroyed after " + maxLifetime + " seconds");
+    }
+    else
+    {
+        Debug.LogWarning("⚠️ No deathEffectPrefab assigned for blood effect!");
     }
 }
 
