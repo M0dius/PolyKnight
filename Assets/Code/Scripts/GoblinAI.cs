@@ -20,6 +20,12 @@ public class GoblinAI : MonoBehaviour
     public float moveSpeed = 3.5f;
     public float rotationSpeed = 120f;
     public float acceleration = 8f;
+
+
+    [Header("Key Drop Settings")]
+public bool isLastEnemy = false; // Set this to true for the last goblin in each level
+public GameObject keyPrefab;
+public bool useAutoLastEnemy = true; // Automatically determine if this is the last enemy
     
     // Public reference to player that can be set in inspector
     public Transform playerDirectReference;
@@ -43,7 +49,7 @@ public class GoblinAI : MonoBehaviour
     private GoblinState currentState = GoblinState.Idle;
     private float lastAttackTime = 0f;
     
-    private bool isDead = false;
+public bool isDead = false;
     private bool isPositioned = true; // Changed to true by default to ensure movement
     private float nextAttackTime = 0f; // Time-based attack system instead of boolean flag
 
@@ -443,18 +449,24 @@ public class GoblinAI : MonoBehaviour
             Die();
     }
 
-    void Die()
+   void Die()
+{
+    isDead = true;
+    Debug.Log("☠️ Goblin died.");
+    if (animator != null) animator.SetTrigger(dieParam);
+    if (agent != null) agent.enabled = false;
+
+    Collider col = GetComponent<Collider>();
+    if (col != null) col.enabled = false;
+    
+    // Check if this is the last enemy in the level
+    if (isLastEnemy || (useAutoLastEnemy && IsLastEnemyInLevel()))
     {
-        isDead = true;
-        Debug.Log("☠️ Goblin died.");
-        if (animator != null) animator.SetTrigger(dieParam);
-        if (agent != null) agent.enabled = false;
-
-        Collider col = GetComponent<Collider>();
-        if (col != null) col.enabled = false;
-
-        Destroy(gameObject, 3f);
+        DropKey();
     }
+
+    Destroy(gameObject, 3f);
+}
 
     void OnDrawGizmosSelected()
     {
@@ -471,4 +483,53 @@ public class GoblinAI : MonoBehaviour
             Gizmos.DrawWireCube(areaCenter, areaSize);
         }
     }
+
+
+
+bool IsLastEnemyInLevel()
+{
+    // Count active goblins in the scene
+    GoblinAI[] goblins = FindObjectsOfType<GoblinAI>();
+    int activeGoblins = 0;
+    
+    foreach (GoblinAI goblin in goblins)
+    {
+        if (goblin != this && !goblin.isDead)
+        {
+            activeGoblins++;
+        }
+    }
+    
+    // If this is the last one, return true
+    return activeGoblins == 0;
+}
+
+void DropKey()
+{
+    if (keyPrefab != null)
+    {
+        // Instantiate the key slightly above the goblin
+        Vector3 keyPosition = transform.position + Vector3.up * 0.5f;
+        GameObject key = Instantiate(keyPrefab, keyPosition, Quaternion.identity);
+        
+        // Set the key ID based on the current scene
+        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (currentScene.Contains("Level_"))
+        {
+            string levelNumber = currentScene.Replace("Level_", "");
+            KeyItem keyItem = key.GetComponent<KeyItem>();
+            if (keyItem != null)
+            {
+                keyItem.keyID = int.Parse(levelNumber);
+            }
+        }
+        
+        Debug.Log("🔑 Key dropped by last goblin!");
+    }
+    else
+    {
+        Debug.LogWarning("⚠️ Key prefab not assigned to GoblinAI!");
+    }
+}
+
 }
