@@ -124,6 +124,21 @@ public class PlayerHealth : MonoBehaviour
         
         // For now, just disable the player
         gameObject.SetActive(false);
+    
+    // Notify the GameManager
+    GameManager gameManager = FindObjectOfType<GameManager>();
+    if (gameManager != null)
+    {
+        gameManager.PlayerDied();
+    }
+    else
+    {
+        Debug.LogError("❌ GameManager not found!");
+        // As a fallback, restart the current scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Level_1");
+    }
+
+        
     }
     
     // Optional: Add health pickup method
@@ -137,4 +152,7 @@ public class PlayerHealth : MonoBehaviour
             healthBar.SetHealth(currentHealth);
         }
     }
+
+
+
 }
