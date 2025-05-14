@@ -28,6 +28,17 @@ public class GoblinAI : MonoBehaviour
     public float acceleration = 8f;
 
 
+
+    [Header("Coin Drop Settings")]
+public GameObject coinPrefab;
+public int minCoins = 1;
+public int maxCoins = 3;
+public float coinDropForce = 3f;
+public float coinSpreadRadius = 1f;
+public bool alwaysDropCoins = true;
+public float coinDropChance = 1f; // 1f = 100% chanc
+
+
     [Header("Key Drop Settings")]
 public bool isLastEnemy = false; // Set this to true for the last goblin in each level
 public GameObject keyPrefab;
@@ -472,6 +483,9 @@ public bool isDead = false;
         // Disable collider
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
+
+            DropCoins();
+
         
         // Check if this is the last enemy in the level
         if (isLastEnemy || (useAutoLastEnemy && IsLastEnemyInLevel()))
@@ -577,6 +591,53 @@ bool IsLastEnemyInLevel()
     
     // If this is the last one, return true
     return activeGoblins == 0;
+}
+
+
+void DropCoins()
+{
+    // Check if we should drop coins
+    if (!alwaysDropCoins && Random.Range(0f, 1f) > coinDropChance)
+    {
+        return;
+    }
+    
+    if (coinPrefab == null)
+    {
+        Debug.LogWarning("⚠️ Coin prefab not assigned to GoblinAI!");
+        return;
+    }
+    
+    // Determine number of coins to drop
+    int coinsTooDrop = Random.Range(minCoins, maxCoins + 1);
+    
+    Debug.Log($"💰 Dropping {coinsTooDrop} coins from goblin");
+    
+    for (int i = 0; i < coinsTooDrop; i++)
+    {
+        // Calculate random position around goblin
+        Vector3 randomOffset = Random.insideUnitCircle * coinSpreadRadius;
+        Vector3 coinPosition = transform.position + new Vector3(randomOffset.x, 0.5f, randomOffset.y);
+        
+        // Create coin
+        GameObject coin = Instantiate(coinPrefab, coinPosition, Random.rotation);
+        
+        // Add some physics if the coin has a Rigidbody
+        Rigidbody coinRb = coin.GetComponent<Rigidbody>();
+        if (coinRb != null)
+        {
+            Vector3 force = new Vector3(
+                Random.Range(-1f, 1f),
+                Random.Range(0.5f, 1f),
+                Random.Range(-1f, 1f)
+            ).normalized * coinDropForce;
+            
+            coinRb.AddForce(force, ForceMode.Impulse);
+            
+            // Add some random rotation
+            coinRb.AddTorque(Random.insideUnitSphere * coinDropForce, ForceMode.Impulse);
+        }
+    }
 }
 
 void DropKey()
