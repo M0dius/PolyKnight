@@ -19,6 +19,7 @@ public class LevelGate : MonoBehaviour
     [Header("References")]
     public Animator gateAnimator; // Optional: If you have a gate animation
     public string openAnimationTrigger = "Open";
+    public ScreenFader screenFader; // Reference to the ScreenFader
 
     private bool isOpen = false;
     private AudioSource audioSource;
@@ -36,6 +37,13 @@ public class LevelGate : MonoBehaviour
         if (gateAnimator == null)
         {
             gateAnimator = GetComponent<Animator>();
+        }
+
+        // Find the ScreenFader.  Important
+        screenFader = FindObjectOfType<ScreenFader>();
+        if (screenFader == null)
+        {
+            Debug.LogError("ScreenFader not found in the scene!  Make sure you have a FaderCanvas with ScreenFader on it.");
         }
     }
 
@@ -81,8 +89,19 @@ public class LevelGate : MonoBehaviour
             gateAnimator.SetTrigger(openAnimationTrigger);
         }
 
-        // Load next scene after delay
-        StartCoroutine(LoadNextSceneAfterDelay());
+        // Start the fade out and then load the scene
+        if (screenFader != null)
+        {
+            screenFader.StartFadeOut();
+            StartCoroutine(LoadNextSceneAfterDelay()); //modified
+        }
+        else
+        {
+            SceneManager.LoadScene(nextSceneName); //load scene if screenFader is missing
+        }
+
+
+
     }
 
     void ShowInvalidAttempt()
@@ -103,7 +122,16 @@ public class LevelGate : MonoBehaviour
 
     IEnumerator LoadNextSceneAfterDelay()
     {
-        yield return new WaitForSeconds(transitionDelay);
+        // Wait for fade out to complete
+        if (screenFader != null)
+        {
+            while (screenFader.IsFading())
+            {
+                yield return null;
+            }
+        }
+
+        yield return new WaitForSeconds(transitionDelay); // Add a delay, so the player can see
 
         // Save the current scene as last completed level
         string currentScene = SceneManager.GetActiveScene().name;

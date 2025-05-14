@@ -7,14 +7,18 @@ using UnityEngine;
 public class Death : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject deathScreenUI; // Assign your DeathCanvas GameObject here
+    public GameObject deathScreenUI;
 
     [Header("Player Health Reference")]
-    public PlayerHealth playerHealth; // Assign your Player GameObject with the PlayerHealth script here
+    public PlayerHealth playerHealth;
+
+    [Header("First Level Name")]
+    public string firstLevelName = "Level/Scenes/Level_1";
+
+    private bool isDead = false; // Track death state
 
     void Start()
     {
-        // Ensure the death screen UI is initially hidden
         if (deathScreenUI != null)
         {
             deathScreenUI.SetActive(false);
@@ -24,10 +28,9 @@ public class Death : MonoBehaviour
             Debug.LogError("Death Screen UI GameObject not assigned in the Death script!");
         }
 
-        // Subscribe to the player's death event
         if (playerHealth != null)
         {
-            playerHealth.OnPlayerDeath += ShowDeathScreen;
+            playerHealth.OnPlayerDeath += HandlePlayerDeath; // Use a new method
         }
         else
         {
@@ -35,32 +38,45 @@ public class Death : MonoBehaviour
         }
     }
 
-    // This method will be called when the player dies
+    // New method to handle player death
+    private void HandlePlayerDeath()
+    {
+        if (!isDead) // Only do this once
+        {
+            isDead = true;
+            ShowDeathScreen();
+            StartCoroutine(UnlockCursorDelayed()); // Unlock cursor with delay
+        }
+    }
+
     private void ShowDeathScreen()
     {
         if (deathScreenUI != null)
         {
             deathScreenUI.SetActive(true);
-            // Optional: Pause the game time when the death screen appears
             Time.timeScale = 0f;
         }
     }
 
-    // Called when the "Restart" button is clicked
     public void RestartGame()
     {
-        // Resume game time
         Time.timeScale = 1f;
-        // Reload the current scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(firstLevelName);
+        isDead = false; // Reset death state
     }
 
-    // Called when the "Main Menu" button is clicked
-    public void GoToMainMenu(string mainMenuSceneName = "MainMenu") // Set your main menu scene name here
+    public void GoToMainMenu(string mainMenuSceneName = "Level/Scenes/MainMenu")
     {
-        // Resume game time
         Time.timeScale = 1f;
-        // Load the main menu scene
         SceneManager.LoadScene(mainMenuSceneName);
+        isDead = false; // Reset death state
+    }
+
+    // Coroutine to unlock cursor after a delay
+    private IEnumerator UnlockCursorDelayed()
+    {
+        yield return new WaitForSecondsRealtime(0.1f); // Short delay, independent of timeScale
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
