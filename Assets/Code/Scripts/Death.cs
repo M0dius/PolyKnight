@@ -13,7 +13,9 @@ public class Death : MonoBehaviour
     public PlayerHealth playerHealth;
 
     [Header("First Level Name")]
-    public string firstLevelName = "Level/Scenes/Level_1";  // Changed to the correct scene name
+    public string firstLevelName = "Level/Scenes/Level_1";
+
+    private bool isDead = false; // Track death state
 
     void Start()
     {
@@ -28,11 +30,22 @@ public class Death : MonoBehaviour
 
         if (playerHealth != null)
         {
-            playerHealth.OnPlayerDeath += ShowDeathScreen;
+            playerHealth.OnPlayerDeath += HandlePlayerDeath; // Use a new method
         }
         else
         {
             Debug.LogError("PlayerHealth script not assigned in the Death script!");
+        }
+    }
+
+    // New method to handle player death
+    private void HandlePlayerDeath()
+    {
+        if (!isDead) // Only do this once
+        {
+            isDead = true;
+            ShowDeathScreen();
+            StartCoroutine(UnlockCursorDelayed()); // Unlock cursor with delay
         }
     }
 
@@ -49,11 +62,21 @@ public class Death : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(firstLevelName);
+        isDead = false; // Reset death state
     }
 
     public void GoToMainMenu(string mainMenuSceneName = "Level/Scenes/MainMenu")
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
+        isDead = false; // Reset death state
+    }
+
+    // Coroutine to unlock cursor after a delay
+    private IEnumerator UnlockCursorDelayed()
+    {
+        yield return new WaitForSecondsRealtime(0.1f); // Short delay, independent of timeScale
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
