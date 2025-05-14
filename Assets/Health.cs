@@ -17,7 +17,7 @@ public class Health : MonoBehaviour
             Debug.LogError("Health slider is null! Please assign it in the inspector.");
             return;
         }
-        
+
         slider.maxValue = health;
         slider.value = health;
 
@@ -34,7 +34,7 @@ public class Health : MonoBehaviour
             Debug.LogError("Health slider is null! Please assign it in the inspector.");
             return;
         }
-        
+
         // Make sure health doesn't go below zero
         health = Mathf.Max(0, health);
         slider.value = health;
@@ -58,7 +58,7 @@ public class Health : MonoBehaviour
                 Debug.LogError("No Slider component found on this GameObject!");
             }
         }
-        
+
         if (fill == null)
         {
             // Try to find the fill image
@@ -71,7 +71,7 @@ public class Health : MonoBehaviour
                     fill = fillTransform.GetComponent<Image>();
                 }
             }
-            
+
             if (fill == null)
             {
                 Debug.LogWarning("Fill image not assigned and couldn't be found automatically.");
@@ -82,6 +82,6 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

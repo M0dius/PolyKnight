@@ -833,6 +833,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -841,6 +844,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -849,6 +855,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!1001 &25542026
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11185,6 +11192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -11193,6 +11203,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -11201,6 +11214,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!114 &477426621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11213,6 +11227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -11221,6 +11238,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -11229,6 +11249,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!114 &477426622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11241,6 +11262,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -11249,6 +11273,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -11257,6 +11284,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!136 &477426623
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -18624,6 +18652,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -18632,6 +18663,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -18640,6 +18674,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!136 &743741466
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -21247,72 +21282,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5032722502549838500, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
   m_PrefabInstance: {fileID: 832871642}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &839049571
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1490040658}
-    m_Modifications:
-    - target: {fileID: 1220885979054626961, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_Name
-      value: orc (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_RootOrder
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.86
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
---- !u!4 &839049572 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-  m_PrefabInstance: {fileID: 839049571}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &840232689
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21891,6 +21860,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -21899,6 +21871,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -21907,6 +21882,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!1001 &865014439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28864,6 +28840,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -28872,6 +28851,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -28880,6 +28862,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!136 &1119753938
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -39086,10 +39069,6 @@ Transform:
   - {fileID: 622006767}
   - {fileID: 1438012110}
   - {fileID: 451197343}
-  - {fileID: 839049572}
-  - {fileID: 2062636170}
-  - {fileID: 2117481835}
-  - {fileID: 1938520238}
   - {fileID: 2113317302}
   - {fileID: 2075127177}
   - {fileID: 2070858710}
@@ -47961,6 +47940,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -47969,6 +47951,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -47977,6 +47962,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!1001 &1825571319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49743,6 +49729,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -49751,6 +49740,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -49759,6 +49751,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!1 &1885858696
 GameObject:
   m_ObjectHideFlags: 0
@@ -51419,80 +51412,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4213791205017447322, guid: c78d5e9c9922f334d95a3be08c79a8e2, type: 3}
   m_PrefabInstance: {fileID: 1937937343}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1938520237
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1490040658}
-    m_Modifications:
-    - target: {fileID: 1220885979054626961, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_Name
-      value: orc
-      objectReference: {fileID: 0}
-    - target: {fileID: 1220885979054626961, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_TagString
-      value: Goblin
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_RootOrder
-      value: 78
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.47
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 2.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.000047936897
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788401020338611061, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
---- !u!4 &1938520238 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-  m_PrefabInstance: {fileID: 1938520237}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1941229920
 PrefabInstance:
@@ -53578,6 +53497,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c51a1b9df50417f834e5366c0d59bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffectPrefab: {fileID: 0}
+  bloodSpawnPoint: {fileID: 0}
+  bloodRotationOffset: {x: -90, y: 0, z: 0}
   health: 30
   damage: 7
   detectionRange: 50
@@ -53586,6 +53508,9 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  isLastEnemy: 0
+  keyPrefab: {fileID: 0}
+  useAutoLastEnemy: 1
   playerDirectReference: {fileID: 0}
   manualPlayerPosition: {x: -8.582, y: 1.15, z: -1}
   useManualPosition: 0
@@ -53594,6 +53519,7 @@ MonoBehaviour:
   areaSize: {x: 0, y: 0, z: 0}
   minDistanceFromOtherEnemies: 2
   minDistanceFromPlayer: 5
+  isDead: 0
 --- !u!136 &2004803827
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -55225,72 +55151,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4213791205017447322, guid: c78d5e9c9922f334d95a3be08c79a8e2, type: 3}
   m_PrefabInstance: {fileID: 2058182099}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2062636169
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1490040658}
-    m_Modifications:
-    - target: {fileID: 1220885979054626961, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_Name
-      value: orc
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_RootOrder
-      value: 76
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
---- !u!4 &2062636170 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-  m_PrefabInstance: {fileID: 2062636169}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2068526200
 PrefabInstance:
@@ -57062,72 +56922,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4213791205017447322, guid: c78d5e9c9922f334d95a3be08c79a8e2, type: 3}
   m_PrefabInstance: {fileID: 2114122463}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2117481834
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1490040658}
-    m_Modifications:
-    - target: {fileID: 1220885979054626961, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_Name
-      value: orc (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_RootOrder
-      value: 77
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -2.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
---- !u!4 &2117481835 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1998091872727073323, guid: 770cbae6f13064269b917b517be9c4f0, type: 3}
-  m_PrefabInstance: {fileID: 2117481834}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2125402365
 PrefabInstance:
