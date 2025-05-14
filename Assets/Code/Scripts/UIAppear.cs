@@ -9,7 +9,7 @@ public class UIAppear : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private float fadeDuration = 1f;
-    [SerializeField] private float displayDuration = 2f;
+    [SerializeField] private float displayDuration = 1f;
 
     private bool hasActivated = false;
 

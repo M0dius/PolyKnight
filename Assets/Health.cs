@@ -49,32 +49,32 @@ public class Health : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Check if components are assigned
         if (slider == null)
         {
             slider = GetComponent<Slider>();
             if (slider == null)
             {
-                Debug.LogError("No Slider component found on this GameObject!");
+                Debug.LogError("No Slider component found! Assign the slider in the inspector.");
+                return;
             }
         }
 
-        if (fill == null)
+        if (fill == null && slider != null)
         {
-            // Try to find the fill image
-            Transform fillArea = transform.Find("Fill Area");
-            if (fillArea != null)
+            // Try to find fill in the children of the slider
+            Image[] images = slider.GetComponentsInChildren<Image>();
+            foreach (Image img in images)
             {
-                Transform fillTransform = fillArea.Find("Fill");
-                if (fillTransform != null)
+                if (img.gameObject.name == "Fill")
                 {
-                    fill = fillTransform.GetComponent<Image>();
+                    fill = img;
+                    break;
                 }
             }
 
             if (fill == null)
             {
-                Debug.LogWarning("Fill image not assigned and couldn't be found automatically.");
+                Debug.LogWarning("Fill image not assigned and couldn't be found in children.");
             }
         }
     }
