@@ -756,6 +756,13 @@ MonoBehaviour:
   moveSpeed: 3.5
   rotationSpeed: 120
   acceleration: 8
+  coinPrefab: {fileID: 3129200342344496425, guid: 3e29573f06c0a7e4fa986fff41de17af, type: 3}
+  minCoins: 1
+  maxCoins: 3
+  coinDropForce: 3
+  coinSpreadRadius: 1
+  alwaysDropCoins: 1
+  coinDropChance: 1
   isLastEnemy: 0
   keyPrefab: {fileID: 0}
   useAutoLastEnemy: 1
