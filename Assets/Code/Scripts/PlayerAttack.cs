@@ -8,14 +8,14 @@ public class PlayerAttack : MonoBehaviour
     public float attackRange = 1.5f;
     public float attackDamage = 10f;
     public LayerMask enemyLayer;
-    
+
     private float attackCooldown = 0.5f;
     private float lastAttackTime = 0f;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        
+
         if (animator == null)
         {
             Debug.LogError("[PlayerAttack] Animator not found on Player!");
@@ -24,6 +24,12 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
+        // Check if the game is paused. If it is, don't process attack input.
+        if (PauseMenu.GameIsPaused)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && Time.time >= lastAttackTime + attackCooldown)
         {
             if (animator != null)
@@ -39,34 +45,27 @@ public class PlayerAttack : MonoBehaviour
 
     void Attack()
     {
-       
         Collider[] enemiesHit = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
 
-       
         foreach (Collider enemy in enemiesHit)
         {
-       
             GoblinAI goblinAI = enemy.GetComponent<GoblinAI>();
             if (goblinAI != null)
             {
-       
                 goblinAI.TakeDamage(attackDamage);
                 Debug.Log("Attacked " + enemy.name + " for " + attackDamage + " damage.");
             }
         }
     }
 
-    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    
     private void OnTriggerEnter(Collider other)
     {
-    
         if (other.CompareTag("Goblin"))
         {
             GoblinAI goblin = other.GetComponent<GoblinAI>();
