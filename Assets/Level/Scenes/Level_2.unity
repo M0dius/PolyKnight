@@ -5139,6 +5139,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5929472089290319468, guid: 618c410feb114c349b2212c461d9b95c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -5.2029
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6268,6 +6272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathScreenUI: {fileID: 179035474}
   playerHealth: {fileID: 919132147858440316}
+  firstLevelName: Level/Scenes/Level_1
 --- !u!114 &1483319073
 MonoBehaviour:
   m_ObjectHideFlags: 0
