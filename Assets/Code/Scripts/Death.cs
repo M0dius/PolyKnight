@@ -19,22 +19,43 @@ public class Death : MonoBehaviour
 
     void Start()
     {
+        // Ensure death screen is hidden at start
         if (deathScreenUI != null)
         {
             deathScreenUI.SetActive(false);
+            isDead = false; // Reset death state on scene start
         }
         else
         {
             Debug.LogError("Death Screen UI GameObject not assigned in the Death script!");
         }
 
+        // Reset time scale to ensure game is running
+        Time.timeScale = 1f;
+        
+        // Ensure cursor is locked for gameplay
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // Subscribe to player death event
         if (playerHealth != null)
         {
-            playerHealth.OnPlayerDeath += HandlePlayerDeath; // Use a new method
+            playerHealth.OnPlayerDeath += HandlePlayerDeath;
         }
         else
         {
-            Debug.LogError("PlayerHealth script not assigned in the Death script!");
+            Debug.LogWarning("PlayerHealth script not assigned in the Death script! Trying to find it in the scene...");
+            playerHealth = FindObjectOfType<PlayerHealth>();
+            
+            if (playerHealth != null)
+            {
+                Debug.Log("Found PlayerHealth in scene, subscribing to death event");
+                playerHealth.OnPlayerDeath += HandlePlayerDeath;
+            }
+            else
+            {
+                Debug.LogError("Could not find PlayerHealth in the scene!");
+            }
         }
     }
 

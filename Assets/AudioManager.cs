@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    // Static instance for singleton pattern
+    public static AudioManager Instance { get; private set; }
+    
     [Header("---------- Audio Source --------")]
     [SerializeField] AudioSource musicSource;
     [SerializeField] AudioSource SFXSource;
@@ -24,8 +27,26 @@ public class AudioManager : MonoBehaviour
     public AudioClip coinDrop;
     public AudioClip coinCollect;
     public AudioClip bossDeath;
-
-
+    public AudioClip goblinAttack;
+    public AudioClip goblinHurt;
+    
+    // Awake is called before Start
+    private void Awake()
+    {
+        // Singleton pattern implementation
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("AudioManager: Instance created and set to persist");
+        }
+        else
+        {
+            Debug.Log("AudioManager: Instance already exists, destroying duplicate");
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
