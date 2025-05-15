@@ -88,7 +88,26 @@ public bool isDead = false;
 
     public void Awake()
     {
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        try
+        {
+            // Try to find AudioManager using the singleton pattern first
+            audioManager = AudioManager.Instance;
+            
+            // If that fails, try to find by tag
+            if (audioManager == null)
+            {
+                GameObject audioObj = GameObject.FindGameObjectWithTag("Audio");
+                if (audioObj != null)
+                    audioManager = audioObj.GetComponent<AudioManager>();
+            }
+            
+            if (audioManager == null)
+                Debug.LogWarning("AudioManager not found for GoblinAI - audio features will be disabled");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Error finding AudioManager: " + e.Message + " - audio features will be disabled");
+        }
     }
 
     void Start()
@@ -519,7 +538,8 @@ public bool isDead = false;
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
 
-        audioManager.PlaySFX(audioManager.coinDrop);
+        if (audioManager != null)
+            audioManager.PlaySFX(audioManager.coinDrop);
         DropCoins();
 
         
@@ -530,7 +550,8 @@ public bool isDead = false;
         }
         if (healthUI != null)
         healthUI.gameObject.SetActive(false);
-        audioManager.PlaySFX(audioManager.goblinDeath);
+        if (audioManager != null)
+            audioManager.PlaySFX(audioManager.goblinDeath);
 
 
         // Destroy the goblin after delay
