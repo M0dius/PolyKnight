@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
 
@@ -29,7 +28,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor on resume
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
@@ -38,8 +37,8 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
-        Cursor.lockState = CursorLockMode.None;   // Unlock cursor on pause
-        Cursor.visible = true;                  // Make cursor visible
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void LoadMenu()
@@ -59,6 +58,10 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneTracker.previousScene = SceneManager.GetActiveScene().name;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetReturningFromSettings();
+        }
         SceneManager.LoadScene("Settings");
         Debug.Log("Loading settings menu...");
     }

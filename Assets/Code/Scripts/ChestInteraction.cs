@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ChestInteraction : MonoBehaviour
 {
-      [Header("Interaction Settings")]
+    [Header("Interaction Settings")]
     public float interactionRange = 2f;
     public string interactionButton = "E";
 
@@ -22,17 +22,22 @@ public class ChestInteraction : MonoBehaviour
     [Header("Player Reference")]
     public Transform playerInteractionPoint;
 
+    [Header("Coin Spawning")]
+    public GameObject coinPrefab;
+    public int coinCount = 5;
+    public Transform coinSpawnPoint;
+    public float coinSpread = 1.0f;
+
     private Transform playerTransformRoot;
     private bool isInRange = false;
     private bool isOpened = false;
     private Quaternion closedRotation;
 
-    // Static variable to track if the player has the key (accessible from other scripts if needed)
     public static bool PlayerHasKey = false;
 
     void Start()
     {
-        playerTransformRoot = GameObject.FindGameObjectWithTag("Player").transform;
+        playerTransformRoot = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (playerTransformRoot == null) Debug.LogError("Player not found.");
 
         if (playerInteractionPoint == null)
@@ -41,15 +46,7 @@ public class ChestInteraction : MonoBehaviour
             Debug.LogWarning("Player Interaction Point not assigned, using Player root.");
         }
 
-        if (interactionPromptUI != null)
-        {
-            Debug.Log("interactionPromptUI found in Start(), setting inactive."); // Added log
-            interactionPromptUI.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("interactionPromptUI is null in Start()!"); // Added log
-        }
+        if (interactionPromptUI != null) interactionPromptUI.SetActive(false);
 
         if (chestLid != null) closedRotation = chestLid.transform.localRotation;
     }
@@ -59,19 +56,16 @@ public class ChestInteraction : MonoBehaviour
         if (!isOpened && playerInteractionPoint != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, playerInteractionPoint.position);
-
             bool shouldShowPrompt = distanceToPlayer <= interactionRange;
 
             if (shouldShowPrompt && !isInRange)
             {
                 isInRange = true;
-                Debug.Log("Player entered interaction range - Showing Prompt.");
                 if (interactionPromptUI != null) interactionPromptUI.SetActive(true);
             }
             else if (!shouldShowPrompt && isInRange)
             {
                 isInRange = false;
-                Debug.Log("Player exited interaction range - Hiding Prompt.");
                 if (interactionPromptUI != null) interactionPromptUI.SetActive(false);
             }
 
@@ -85,6 +79,7 @@ public class ChestInteraction : MonoBehaviour
     void OpenChest()
     {
         isOpened = true;
+
         if (interactionPromptUI != null) interactionPromptUI.SetActive(false);
         if (chestLid != null) StartCoroutine(RotateLid(Quaternion.Euler(openRotation)));
 
@@ -92,11 +87,38 @@ public class ChestInteraction : MonoBehaviour
         {
             PlayerHasKey = true;
             keyGiven = true;
-            Debug.Log("Player received the " + keyName + ".");
-        }
+            Debug.Log("Player received the " + keyName);
+
+            SpawnCoins(); // 🎉 Spawn coins when chest opens
+        }
         else
         {
-            Debug.Log("Chest is already opened.");
+            Debug.Log("Chest already opened.");
+        }
+    }
+
+    void SpawnCoins()
+    {
+        if (coinPrefab == null)
+        {
+            Debug.LogWarning("Coin prefab not assigned.");
+            return;
+        }
+
+        for (int i = 0; i < coinCount; i++)
+        {
+            Vector3 randomOffset = Random.insideUnitSphere * coinSpread;
+            randomOffset.y = Mathf.Abs(randomOffset.y); // Keep coins above ground
+            Vector3 spawnPos = (coinSpawnPoint != null ? coinSpawnPoint.position : transform.position) + randomOffset;
+
+            GameObject coin = Instantiate(coinPrefab, spawnPos, Quaternion.identity);
+
+            // Optionally add some upward force or animation
+            Rigidbody rb = coin.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(Vector3.up * 3f + Random.insideUnitSphere * 2f, ForceMode.Impulse);
+            }
         }
     }
 

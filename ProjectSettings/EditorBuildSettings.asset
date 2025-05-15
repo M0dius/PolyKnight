@@ -27,9 +27,12 @@ EditorBuildSettings:
     path: Assets/Level/Scenes/Level_6.unity
     guid: 4d5f9cee7886c4f94af37277dad105ce
   - enabled: 1
-    path: Assets/Level/Scenes/AbdullahScene.unity
-    guid: d4040c6de602db445878013bb3233427
-  - enabled: 1
     path: Assets/Level/Scenes/Settings.unity
     guid: 96db0351222ed5c4ebce743252bbd81d
+  - enabled: 1
+    path: Assets/Level/Scenes/Help.unity
+    guid: 42e3143201e3aac4fbc21d5336cffcc7
+  - enabled: 1
+    path: Assets/Level/Scenes/AbdullahScene.unity
+    guid: d4040c6de602db445878013bb3233427
   m_configObjects: {}
