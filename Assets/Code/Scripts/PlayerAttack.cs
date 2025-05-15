@@ -74,6 +74,25 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // First check specifically for the Goblin King (regardless of tag)
+        GoblinKingAI king = other.GetComponent<GoblinKingAI>();
+        if (king != null)
+        {
+            king.TakeDamage(attackDamage);
+            Debug.Log("Goblin King hit! Dealing " + attackDamage + " damage.");
+            return;
+        }
+        
+        // Then check for the Goblin Prince (regardless of tag)
+        GoblinPrinceAI prince = other.GetComponent<GoblinPrinceAI>();
+        if (prince != null)
+        {
+            prince.TakeDamage(attackDamage);
+            Debug.Log("Goblin Prince hit! Dealing " + attackDamage + " damage.");
+            return;
+        }
+        
+        // Finally check for regular goblins with the Goblin tag
         if (other.CompareTag("Goblin"))
         {
             GoblinAI goblin = other.GetComponent<GoblinAI>();
@@ -81,6 +100,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 goblin.TakeDamage(attackDamage);
                 Debug.Log("Goblin hit! Dealing " + attackDamage + " damage.");
+                return;
             }
         }
     }
