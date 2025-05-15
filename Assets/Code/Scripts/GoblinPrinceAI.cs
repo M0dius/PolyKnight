@@ -48,6 +48,22 @@ public class GoblinPrinceAI : MonoBehaviour
     public Vector3 crownRotation = new Vector3(0, 0, 0);
     public Vector3 crownScale = new Vector3(0.5f, 0.5f, 0.5f);
     
+    [Header("Key Drop Settings")]
+    public bool isLastEnemy = false; // Set this to true for the last goblin in each level
+    public GameObject keyPrefab;
+    public bool useAutoLastEnemy = true; // Automatically determine if this is the last enemy
+    
+    // Public reference to player that can be set in inspector
+    public Transform playerDirectReference;
+    
+    // Manual player position (use this instead of trying to find player)
+    [Header("Manual Player Settings")]
+    public Vector3 manualPlayerPosition = new Vector3(-8.582f, 1.15f, -1.0f);
+    public bool useManualPosition = false; // Set to false to follow the actual player
+    
+    [Header("Audio Settings")]
+    public AudioManager audioManager;
+    
     // State management
     private enum PrinceState { Idle, Chasing, Attacking, Stunned }
     private PrinceState currentState = PrinceState.Idle;
@@ -67,14 +83,6 @@ public class GoblinPrinceAI : MonoBehaviour
     private string kickLeftParam = "kickLeft";
     private string kickRightParam = "kickRight";
     
-    // Reference to player that can be set in inspector
-    public Transform playerDirectReference;
-    
-    // Manual player position (fallback)
-    [Header("Manual Player Settings")]
-    public Vector3 manualPlayerPosition = new Vector3(-8.582f, 1.15f, -1.0f);
-    public bool useManualPosition = false;
-    
     void Start()
     {
         // Get components
@@ -89,6 +97,16 @@ public class GoblinPrinceAI : MonoBehaviour
             agent.stoppingDistance = attackRange * 0.8f;
         } else {
             Debug.LogError("❗ NavMeshAgent component missing on Goblin Prince!");
+        }
+        
+        // Find audio manager if not assigned
+        if (audioManager == null)
+        {
+            audioManager = FindObjectOfType<AudioManager>();
+            if (audioManager == null)
+            {
+                Debug.LogWarning("⚠️ AudioManager not found in scene!");
+            }
         }
         
         // Find player using a reliable method
@@ -432,15 +450,53 @@ public class GoblinPrinceAI : MonoBehaviour
         // Drop coins
         DropCoins();
         
+        // Check if this is the last enemy and drop key
+        if (isLastEnemy || (useAutoLastEnemy && IsLastEnemyInLevel()))
+        {
+            DropKey();
+        }
+        
         // Hide health UI
         if (healthUI != null)
             healthUI.gameObject.SetActive(false);
+
+        // Play death sound
+        if (audioManager != null && audioManager.goblinDeath != null)
+        {
+            audioManager.PlaySFX(audioManager.goblinDeath);
+        }
 
         // Death effect
         StartCoroutine(DeathEffect());
 
         // Destroy after delay
         Destroy(gameObject, 4f);
+    }
+    
+    private bool IsLastEnemyInLevel()
+    {
+        // Find all goblins in the scene (both regular and princes)
+        GoblinAI[] regularGoblins = FindObjectsOfType<GoblinAI>();
+        GoblinPrinceAI[] princes = FindObjectsOfType<GoblinPrinceAI>();
+        
+        // Count alive enemies
+        int aliveCount = 0;
+        
+        // Count alive regular goblins
+        foreach (var goblin in regularGoblins)
+        {
+            if (goblin != null && !goblin.isDead)
+                aliveCount++;
+        }
+        
+        // Count alive princes (excluding this one since it's about to die)
+        foreach (var prince in princes)
+        {
+            if (prince != null && prince != this && !prince.isDead)
+                aliveCount++;
+        }
+        
+        return aliveCount == 0;
     }
     
     private IEnumerator AttackVisualEffect()
@@ -677,6 +733,34 @@ public class GoblinPrinceAI : MonoBehaviour
                 // Add some random rotation
                 coinRb.AddTorque(Random.insideUnitSphere * coinDropForce, ForceMode.Impulse);
             }
+        }
+    }
+
+    void DropKey()
+    {
+        if (keyPrefab != null)
+        {
+            // Instantiate the key slightly above the goblin
+            Vector3 keyPosition = transform.position + Vector3.up * 0.5f;
+            GameObject key = Instantiate(keyPrefab, keyPosition, Quaternion.identity);
+            
+            // Set the key ID based on the current scene
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (currentScene.Contains("Level_"))
+            {
+                string levelNumber = currentScene.Replace("Level_", "");
+                KeyItem keyItem = key.GetComponent<KeyItem>();
+                if (keyItem != null)
+                {
+                    keyItem.keyID = int.Parse(levelNumber);
+                }
+            }
+            
+            Debug.Log("🔑 Key dropped by last goblin!");
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Key prefab not assigned to GoblinPrinceAI!");
         }
     }
 }
