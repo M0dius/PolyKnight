@@ -470,6 +470,8 @@ MonoBehaviour:
   coinDrop: {fileID: 8300000, guid: ed2d6e3d07499374c9d5cf3465e18773, type: 3}
   coinCollect: {fileID: 8300000, guid: a2b7673b3397a7d4498c0fd63abd9e4f, type: 3}
   bossDeath: {fileID: 8300000, guid: 25bc58305b58eb44685d091f1127b69f, type: 3}
+  goblinAttack: {fileID: 0}
+  goblinHurt: {fileID: 0}
 --- !u!4 &45397123
 Transform:
   m_ObjectHideFlags: 0
@@ -7619,6 +7621,10 @@ PrefabInstance:
       propertyPath: screenFader
       value: 
       objectReference: {fileID: 478536514}
+    - target: {fileID: 458686700849434442, guid: 5a600e298f48d304db162f663e260b0b, type: 3}
+      propertyPath: requiredKeyID
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 458686700849434442, guid: 5a600e298f48d304db162f663e260b0b, type: 3}
       propertyPath: transitionDelay
       value: 2
