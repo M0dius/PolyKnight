@@ -23,6 +23,13 @@ public class PlayerHealth : MonoBehaviour
     // Public event that other scripts can subscribe to
     public event Action OnPlayerDeath;
 
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         // Initialize health
@@ -124,6 +131,8 @@ public class PlayerHealth : MonoBehaviour
 
         // Invoke the OnPlayerDeath event if there are any subscribers
         OnPlayerDeath?.Invoke();
+
+        audioManager.PlaySFX(audioManager.playerDeath);
 
         // For now, just disable the player GameObject
         gameObject.SetActive(false);

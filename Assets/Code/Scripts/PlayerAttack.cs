@@ -12,6 +12,13 @@ public class PlayerAttack : MonoBehaviour
     private float attackCooldown = 0.5f;
     private float lastAttackTime = 0f;
 
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -34,6 +41,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (animator != null)
             {
+                audioManager.PlaySFX(audioManager.playerAttack);
                 animator.SetTrigger("isAttacking");
             }
 

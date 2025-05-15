@@ -24,6 +24,13 @@ public class LevelGate : MonoBehaviour
     private bool isOpen = false;
     private AudioSource audioSource;
 
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         // Set up audio source
@@ -56,6 +63,8 @@ public class LevelGate : MonoBehaviour
 
             if (hasKey)
             {
+                audioManager.PlaySFX(audioManager.doorTouch);
+                audioManager.PlaySFX(audioManager.Transition);
                 Debug.Log($"Player has key {requiredKeyID}! Opening gate.");
                 OpenGate();
             }

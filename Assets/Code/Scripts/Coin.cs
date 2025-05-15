@@ -33,7 +33,14 @@ public class Coin : MonoBehaviour
     private bool isCollected = false;
     private Renderer coinRenderer;
     private float spawnTime;
-    
+
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         startPosition = transform.position;
@@ -154,6 +161,7 @@ public class Coin : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isCollected)
         {
+            audioManager.PlaySFX(audioManager.coinCollect);
             CollectCoin();
         }
     }

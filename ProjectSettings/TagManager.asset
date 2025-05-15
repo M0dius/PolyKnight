@@ -7,6 +7,7 @@ TagManager:
   - Goblin
   - CoinText
   - CoinIcon
+  - Audio
   layers:
   - Default
   - TransparentFX

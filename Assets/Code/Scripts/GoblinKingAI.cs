@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI; // ✅ This enables use of Slider
-
 
 public class GoblinKingAI : MonoBehaviour
 {
@@ -52,13 +50,16 @@ public class GoblinKingAI : MonoBehaviour
     private string dieParam = "die1";
     private string rageParam = "rage"; // Add this parameter to your animator if available
 
-    [Header("Health UI")]
-    public Canvas healthUI;
-    public Slider healthSlider;
+    AudioManager audioManager;
 
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     void Start()
     {
+        audioManager.PlaySFX(audioManager.bossLaugh);
         // Get components
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -89,12 +90,6 @@ public class GoblinKingAI : MonoBehaviour
         
         // Change the color to distinguish from regular goblins
         ChangeColor(new Color(0.7f, 0.2f, 0.2f)); // Reddish color for the king
-
-        if (healthSlider != null)
-        {
-            healthSlider.maxValue = health;
-            healthSlider.value = health;
-        }
     }
     
     void Update()
@@ -149,23 +144,8 @@ public class GoblinKingAI : MonoBehaviour
                 animator.SetBool(sprintParam, isRaging && isMoving);
             }
         }
-
-        if (healthSlider != null)
-        {
-            healthSlider.value = health;
-        }
-
-        if (healthUI != null && Camera.main != null)
-        {
-            Vector3 offset = new Vector3(0, 2f, 0); // Adjust Y to float above head
-            healthUI.transform.position = transform.position + offset;
-            healthUI.transform.LookAt(Camera.main.transform);
-            healthUI.transform.Rotate(0, 180, 0); // Flip to face the camera properly
-        }
-
-
     }
-
+    
     void FindPlayer()
     {
         // Try to find the Player component
@@ -306,12 +286,6 @@ public class GoblinKingAI : MonoBehaviour
         if (health <= 0) {
             Die();
         }
-
-        if (healthSlider != null)
-        {
-            healthSlider.value = health;
-        }
-
     }
     
     void Die()
@@ -330,9 +304,9 @@ public class GoblinKingAI : MonoBehaviour
         // Disable collider
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
-        
+
         // Optional: Drop loot, trigger level completion, etc.
-        
+        audioManager.PlaySFX(audioManager.bossDeath);
         // Destroy after delay
         Destroy(gameObject, 5f);
     }

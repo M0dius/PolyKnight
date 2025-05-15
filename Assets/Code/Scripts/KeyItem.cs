@@ -14,7 +14,14 @@ public class KeyItem : MonoBehaviour
     
     private Vector3 startPosition;
     private AudioSource audioSource;
-    
+
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         startPosition = transform.position;
@@ -65,7 +72,7 @@ public class KeyItem : MonoBehaviour
             {
                 AudioSource.PlayClipAtPoint(pickupSound, transform.position);
             }
-            
+            audioManager.PlaySFX(audioManager.Collect);
             // Destroy the key
             Destroy(gameObject);
         }
