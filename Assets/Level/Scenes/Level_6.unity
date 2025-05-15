@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -245,6 +245,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_19
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -406,6 +410,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_16
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -533,6 +541,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_1
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1082,6 +1094,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_4
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2818,6 +2834,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_12
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2997,6 +3017,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_14
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3728,6 +3752,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_18
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3794,6 +3822,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_15
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4185,6 +4217,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_9
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4251,6 +4287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_8
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6165,6 +6205,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_22
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6226,6 +6270,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_10
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6421,6 +6469,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap
       objectReference: {fileID: 0}
+    - target: {fileID: 7822318278258142964, guid: eda36a021a8e3a541b89053e7bce2c9e, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7432,6 +7484,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_3
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9114,6 +9170,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_13
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12262,6 +12322,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_20
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12569,6 +12633,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_23
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13106,6 +13174,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_2
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13167,6 +13239,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_17
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13462,6 +13538,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_6
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     - target: {fileID: 8248353604727346433, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -14089,6 +14169,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_5
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14150,6 +14234,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_21
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15433,6 +15521,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_11
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17923,6 +18015,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large_7
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21017,7 +21113,7 @@ MonoBehaviour:
   currentHealth: 0
   healthBar: {fileID: 0}
   damageEffect: {fileID: 0}
-  damageSound: {fileID: 0}
+  damageSound: {fileID: 8300000, guid: e84d951daf4fd204eb5ab842f9fb5779, type: 3}
 --- !u!54 &919132147858440317
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21267,6 +21363,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: trap-spikes-large
       objectReference: {fileID: 0}
+    - target: {fileID: 6201732445168579718, guid: 01350c9c768993e44a5337b145054cd4, type: 3}
+      propertyPath: trapSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 78b7bd4ea35d4534e974d15a6748aba4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

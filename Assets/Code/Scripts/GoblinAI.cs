@@ -84,6 +84,13 @@ public bool isDead = false;
     private string kickLeftParam = "kickLeft";
     private string kickRightParam = "kickRight";
 
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         // Get components
@@ -512,7 +519,8 @@ public bool isDead = false;
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
 
-            DropCoins();
+        audioManager.PlaySFX(audioManager.coinDrop);
+        DropCoins();
 
         
         // Check if this is the last enemy in the level
@@ -521,7 +529,9 @@ public bool isDead = false;
             DropKey();
         }
         if (healthUI != null)
-            healthUI.gameObject.SetActive(false);
+        healthUI.gameObject.SetActive(false);
+        audioManager.PlaySFX(audioManager.goblinDeath);
+
 
         // Destroy the goblin after delay
         Destroy(gameObject, 3f);

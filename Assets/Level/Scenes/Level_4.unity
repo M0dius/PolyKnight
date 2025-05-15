@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.5748165, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -16541,7 +16541,7 @@ MonoBehaviour:
   currentHealth: 0
   healthBar: {fileID: 0}
   damageEffect: {fileID: 0}
-  damageSound: {fileID: 0}
+  damageSound: {fileID: 8300000, guid: e84d951daf4fd204eb5ab842f9fb5779, type: 3}
 --- !u!54 &919132147858440317
 Rigidbody:
   m_ObjectHideFlags: 0

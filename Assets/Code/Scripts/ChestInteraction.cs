@@ -35,6 +35,13 @@ public class ChestInteraction : MonoBehaviour
 
     public static bool PlayerHasKey = false;
 
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         playerTransformRoot = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -71,6 +78,7 @@ public class ChestInteraction : MonoBehaviour
 
             if (isInRange && Input.GetKeyDown(KeyCode.E))
             {
+                audioManager.PlaySFX(audioManager.chestOpen);
                 OpenChest();
             }
         }
@@ -88,7 +96,7 @@ public class ChestInteraction : MonoBehaviour
             PlayerHasKey = true;
             keyGiven = true;
             Debug.Log("Player received the " + keyName);
-
+            
             SpawnCoins(); // 🎉 Spawn coins when chest opens
         }
         else

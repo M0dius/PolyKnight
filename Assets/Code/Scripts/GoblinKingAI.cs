@@ -49,9 +49,17 @@ public class GoblinKingAI : MonoBehaviour
     private string attackParam = "attack";
     private string dieParam = "die1";
     private string rageParam = "rage"; // Add this parameter to your animator if available
-    
+
+    AudioManager audioManager;
+
+    public void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
+        audioManager.PlaySFX(audioManager.bossLaugh);
         // Get components
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -296,9 +304,9 @@ public class GoblinKingAI : MonoBehaviour
         // Disable collider
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
-        
+
         // Optional: Drop loot, trigger level completion, etc.
-        
+        audioManager.PlaySFX(audioManager.bossDeath);
         // Destroy after delay
         Destroy(gameObject, 5f);
     }
