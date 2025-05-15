@@ -34,6 +34,12 @@ public class GoblinKingAI : MonoBehaviour
     public Vector3 manualPlayerPosition = new Vector3(-8.582f, 1.15f, -1.0f);
     public bool useManualPosition = false;
     
+    [Header("Visual Settings")]
+    public bool shouldCreateCrown = true;
+    public Vector3 crownPosition = new Vector3(0, 1.2f, 0);
+    public Vector3 crownRotation = new Vector3(0, 0, 0);
+    public Vector3 crownScale = new Vector3(0.7f, 0.7f, 0.7f);
+    
     // State management
     private enum GoblinKingState { Idle, Chasing, Attacking, Summoning, Raging }
     private GoblinKingState currentState = GoblinKingState.Idle;
@@ -90,6 +96,11 @@ public class GoblinKingAI : MonoBehaviour
         
         // Change the color to distinguish from regular goblins
         ChangeColor(new Color(0.7f, 0.2f, 0.2f)); // Reddish color for the king
+        
+        // Create crown if needed
+        if (shouldCreateCrown) {
+            CreateCrown();
+        }
     }
     
     void Update()
@@ -261,6 +272,11 @@ public class GoblinKingAI : MonoBehaviour
         // Change the color of the model
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer renderer in renderers) {
+            // Skip if this is part of the crown
+            if (renderer.transform.parent != null && 
+                renderer.transform.parent.name.Contains("Crown"))
+                continue;
+                
             // Change the color of all materials
             foreach (Material material in renderer.materials) {
                 // Check if the material has color property
@@ -269,6 +285,76 @@ public class GoblinKingAI : MonoBehaviour
                 }
             }
         }
+    }
+    
+    private void CreateCrown()
+    {
+        // Create crown game object
+        GameObject crown = new GameObject("KingCrown");
+        crown.transform.SetParent(transform);
+        
+        // Position the crown on the head
+        crown.transform.localPosition = crownPosition;
+        crown.transform.localRotation = Quaternion.Euler(crownRotation);
+        crown.transform.localScale = crownScale;
+        
+        // Create the crown base
+        GameObject crownBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        crownBase.transform.SetParent(crown.transform);
+        crownBase.transform.localPosition = Vector3.zero;
+        crownBase.transform.localScale = new Vector3(0.6f, 0.15f, 0.6f);
+        
+        // Create crown spikes using capsules
+        int spikes = 7; // More spikes for the king
+        for (int i = 0; i < spikes; i++)
+        {
+            float angle = i * (360f / spikes);
+            GameObject spike = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            spike.transform.SetParent(crown.transform);
+            
+            // Position spike around the crown
+            float radius = 0.3f;
+            float x = Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
+            float z = Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
+            spike.transform.localPosition = new Vector3(x, 0.2f, z);
+            
+            // Rotate spike to point outward
+            spike.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            spike.transform.Rotate(0, angle, 0);
+            
+            // Scale spike to make it look pointy
+            spike.transform.localScale = new Vector3(0.12f, 0.25f, 0.12f);
+        }
+        
+        // Create a central gem for the king's crown
+        GameObject gem = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        gem.transform.SetParent(crown.transform);
+        gem.transform.localPosition = new Vector3(0, 0.3f, 0);
+        gem.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        
+        // Apply gold material to all crown parts except the gem
+        Renderer[] renderers = crown.GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer.gameObject == gem)
+                continue;
+                
+            Material crownMaterial = new Material(Shader.Find("Standard"));
+            crownMaterial.color = new Color(0.85f, 0.65f, 0.13f); // Gold color
+            crownMaterial.SetFloat("_Metallic", 0.9f);
+            crownMaterial.SetFloat("_Glossiness", 0.8f);
+            renderer.material = crownMaterial;
+        }
+        
+        // Apply ruby material to the gem
+        Renderer gemRenderer = gem.GetComponent<Renderer>();
+        Material gemMaterial = new Material(Shader.Find("Standard"));
+        gemMaterial.color = new Color(0.9f, 0.1f, 0.1f); // Ruby red
+        gemMaterial.SetFloat("_Metallic", 0.7f);
+        gemMaterial.SetFloat("_Glossiness", 0.9f);
+        gemRenderer.material = gemMaterial;
+        
+        Debug.Log("👑 Created gold crown for Goblin King");
     }
     
     public void TakeDamage(float amount)
