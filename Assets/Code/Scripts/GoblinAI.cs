@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI; // Needed for Slider
+
 
 public class GoblinAI : MonoBehaviour
 {
@@ -16,7 +18,9 @@ public class GoblinAI : MonoBehaviour
     private Animator animator;
 
     [Header("Goblin Stats")]
-    public float health = 30f;
+   
+    public float maxHealth = 30f;
+    private float health;
     public float damage = 7f;
     public float detectionRange = 50f; // Increased detection range
     public float attackRange = 1.5f;
@@ -27,6 +31,8 @@ public class GoblinAI : MonoBehaviour
     public float rotationSpeed = 120f;
     public float acceleration = 8f;
 
+    public Slider healthSlider;
+    public Transform healthUI;
 
 
     [Header("Coin Drop Settings")]
@@ -84,6 +90,7 @@ public bool isDead = false;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         
+
         // Set up NavMeshAgent
         if (agent != null) {
             agent.speed = moveSpeed;
@@ -201,6 +208,14 @@ public bool isDead = false;
         
         // If using random positioning, set it
         if (positionType == PositionType.Random) SetRandomPosition();
+
+        health = maxHealth;
+
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = health;
+        }
     }
 
     void Update()
@@ -339,6 +354,16 @@ public bool isDead = false;
                 // Debug.Log($"[GoblinAI] In attack range, cooldown remaining: {remainingCooldown:F1}s");
             }
         }
+        if (healthUI != null && Camera.main != null)
+        {
+            // Fixed position above goblin
+            Vector3 offset = new Vector3(0f, 1f, 0f); // You can tweak 2.2 to be higher/lower
+            healthUI.position = transform.position + offset;
+
+            // Face the camera
+            healthUI.LookAt(Camera.main.transform);
+            healthUI.Rotate(0, 180, 0);
+        }
     }
 
     void SetRandomPosition()
@@ -462,6 +487,9 @@ public bool isDead = false;
         health -= amount;
         Debug.Log("💢 Goblin took " + amount + " damage.");
 
+        if (healthSlider != null)
+            healthSlider.value = health;
+
         if (health <= 0)
             Die();
     }
@@ -492,6 +520,8 @@ public bool isDead = false;
         {
             DropKey();
         }
+        if (healthUI != null)
+            healthUI.gameObject.SetActive(false);
 
         // Destroy the goblin after delay
         Destroy(gameObject, 3f);
