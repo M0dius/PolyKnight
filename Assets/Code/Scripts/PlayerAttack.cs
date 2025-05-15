@@ -16,7 +16,26 @@ public class PlayerAttack : MonoBehaviour
 
     public void Awake()
     {
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        try
+        {
+            // Try to find AudioManager using the singleton pattern first
+            audioManager = AudioManager.Instance;
+            
+            // If that fails, try to find by tag
+            if (audioManager == null)
+            {
+                GameObject audioObj = GameObject.FindGameObjectWithTag("Audio");
+                if (audioObj != null)
+                    audioManager = audioObj.GetComponent<AudioManager>();
+            }
+            
+            if (audioManager == null)
+                Debug.LogWarning("AudioManager not found for PlayerAttack - audio features will be disabled");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Error finding AudioManager: " + e.Message + " - audio features will be disabled");
+        }
     }
 
     void Start()
@@ -41,7 +60,11 @@ public class PlayerAttack : MonoBehaviour
         {
             if (animator != null)
             {
-                audioManager.PlaySFX(audioManager.playerAttack);
+                // Play attack sound if audio manager is available
+                if (audioManager != null)
+                    audioManager.PlaySFX(audioManager.playerAttack);
+                
+                // Always trigger the attack animation
                 animator.SetTrigger("isAttacking");
             }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,7 +39,26 @@ public class ChestInteraction : MonoBehaviour
 
     public void Awake()
     {
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        try
+        {
+            // Try to find AudioManager using the singleton pattern first
+            audioManager = AudioManager.Instance;
+            
+            // If that fails, try to find by tag
+            if (audioManager == null)
+            {
+                GameObject audioObj = GameObject.FindGameObjectWithTag("Audio");
+                if (audioObj != null)
+                    audioManager = audioObj.GetComponent<AudioManager>();
+            }
+            
+            if (audioManager == null)
+                Debug.LogWarning("AudioManager not found for ChestInteraction - audio features will be disabled");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("Error finding AudioManager: " + e.Message + " - audio features will be disabled");
+        }
     }
 
     void Start()
@@ -78,7 +97,9 @@ public class ChestInteraction : MonoBehaviour
 
             if (isInRange && Input.GetKeyDown(KeyCode.E))
             {
-                audioManager.PlaySFX(audioManager.chestOpen);
+                // Play chest open sound if audio manager is available
+                if (audioManager != null)
+                    audioManager.PlaySFX(audioManager.chestOpen);
                 OpenChest();
             }
         }
