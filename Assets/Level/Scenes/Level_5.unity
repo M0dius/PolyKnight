@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.5748165, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8649,6 +8649,10 @@ PrefabInstance:
       propertyPath: nextSceneName
       value: Level_6
       objectReference: {fileID: 0}
+    - target: {fileID: 458686700849434442, guid: 5a600e298f48d304db162f663e260b0b, type: 3}
+      propertyPath: requiredKeyID
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3306835043393617352, guid: 5a600e298f48d304db162f663e260b0b, type: 3}
       propertyPath: m_Name
       value: wall-gate
@@ -14817,6 +14821,10 @@ PrefabInstance:
       propertyPath: healthUI
       value: 
       objectReference: {fileID: 960293053}
+    - target: {fileID: -6626237683469170269, guid: 4d6a294ec08b74622ae582e947c8e5fb, type: 3}
+      propertyPath: keyPrefab
+      value: 
+      objectReference: {fileID: 374289202576707483, guid: 0ee249459c48c4b8e82016d9b29cbec4, type: 3}
     - target: {fileID: -6626237683469170269, guid: 4d6a294ec08b74622ae582e947c8e5fb, type: 3}
       propertyPath: healthSlider
       value: 
